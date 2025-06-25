@@ -1,41 +1,45 @@
-import React, { useState, useMemo, useEffect } from "react";
-import {
-  User,
-  Bell,
-  Settings,
-  Home,
-  FileText,
-  TrendingUp,
-  Users,
-} from "lucide-react";
+import React, { useState, useMemo } from "react";
 import StatsCard from "../components/StatsCard";
 import { useLatestPatients } from "../hooks/useLatestPatients";
 import mockData from "../data/mockData.json";
-import PatientTable from "../components/PatientsTable";
 import { calculateAge } from "../utils/calculateAge";
-import DiabetesDurationScatter from "../components/DiabetesDurationScatter";
-import BMICategoryBar from "../components/BMICategoryBar";
-import GenderDistribution from "../components/GenderDistribution";
 import { highRiskCount } from "../utils/highRiskCount";
 import AgeDistributionChart from "../components/AgeDistributionChart";
+import GenderDistribution from "../components/GenderDistribution";
 import RiskComparisonChart from "../components/RiskComparisionChart";
-import NeuropathyPrevalenceChart from "../components/NeuropathyPrevalenceChart";
+import { useNavigate } from "react-router-dom";
+import ChartWrapper from "../components/ChartWrapper";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("dashboard");
+  const [showAgeChart, setShowAgeChart] = useState(false);
+  const [showGenderChart, setShowGenderChart] = useState(false);
+  const [showRiskChart, setShowRiskChart] = useState(false);
+  const navigate = useNavigate();
 
-  const allPatientData = useMemo(
-    () => autoParseJsonStrings(mockData),
-    [mockData]
-  );
+  const [patientId, setPatientId] = useState("");
 
+  const allPatientData = useMemo(() => autoParseJsonStrings(mockData), []);
   const patientData = useLatestPatients(allPatientData);
 
-  function autoParseJsonStrings(obj) {
-    if (Array.isArray(obj)) {
-      return obj.map(autoParseJsonStrings);
-    }
+  const maleCount = patientData.filter(
+    (p) => p.allgemeineDaten.geschlecht === "männlich"
+  ).length;
+  const femaleCount = patientData.filter(
+    (p) => p.allgemeineDaten.geschlecht === "weiblich"
+  ).length;
 
+  const ages = patientData.map((p) =>
+    calculateAge(p.allgemeineDaten.geburtsdatum)
+  );
+  const avgAge = Math.round(ages.reduce((a, b) => a + b, 0) / ages.length);
+  const minAge = Math.min(...ages);
+  const maxAge = Math.max(...ages);
+
+  // Risk categories example (customize as needed)
+  const { high, medium, low } = highRiskCount(patientData);
+
+  function autoParseJsonStrings(obj) {
+    if (Array.isArray(obj)) return obj.map(autoParseJsonStrings);
     if (obj !== null && typeof obj === "object") {
       const result = {};
       for (const [key, value] of Object.entries(obj)) {
@@ -43,9 +47,7 @@ const Dashboard = () => {
       }
       return result;
     }
-
     if (typeof obj === "string") {
-      // Try to parse as JSON
       try {
         const trimmed = obj.trim();
         if (
@@ -54,170 +56,129 @@ const Dashboard = () => {
         ) {
           return JSON.parse(trimmed);
         }
-      } catch (e) {
-        // If parsing fails, return original string
-      }
+      } catch (e) {}
     }
-
     return obj;
   }
 
-
-
-  const NavBar = () => (
-    <nav className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-8">
-          <h1 className="text-2xl font-bold text-gray-900">Shooo</h1>
-          <div className="flex space-x-6">
-            <button
-              onClick={() => setActiveTab("dashboard")}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === "dashboard"
-                  ? "bg-blue-100 text-blue-700"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              <Home size={18} />
-              <span>Dashboard</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("patients")}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === "patients"
-                  ? "bg-blue-100 text-blue-700"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              <Users size={18} />
-              <span>Patients</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("reports")}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === "reports"
-                  ? "bg-blue-100 text-blue-700"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              <FileText size={18} />
-              <span>Reports</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("analytics")}
-              className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === "analytics"
-                  ? "bg-blue-100 text-blue-700"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              <TrendingUp size={18} />
-              <span>Analytics</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="flex items-center space-x-4">
-          <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-            <Bell size={20} />
-          </button>
-          <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-            <Settings size={20} />
-          </button>
-          <div className="flex items-center space-x-3 pl-3 border-l border-gray-200">
-            <div className="text-right">
-              <p className="text-sm font-medium text-gray-900">Dr. Smith</p>
-              <p className="text-xs text-gray-500">Podiatrist</p>
-            </div>
-            <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
-              <User size={16} className="text-white" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
-  );
-
-  const DashboardContent = () => (
-    <div className="space-y-6">
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatsCard
-          title="Total Patients"
-          value={patientData.length}
-          subtitle="Active cases"
-          color="blue"
-        />
-        <StatsCard
-          title="Average Age"
-          value={Math.round(
-            patientData.reduce(
-              (sum, p) => sum + calculateAge(p.allgemeineDaten.geburtsdatum),
-              0
-            ) / patientData.length
-          )}
-          subtitle="Years"
-          color="green"
-        />
-        <StatsCard
-          title="High Risk Cases"
-          value={highRiskCount ({patientData})}
-          subtitle="Type VI-VII"
-          color="red"
-        />
-        <StatsCard
-          title="Diabetes Type 2"
-          value={
-            patientData.filter((p) => p.allgemeineDaten.diabetestyp === "typ 2")
-              .length
-          }
-          subtitle="Patients"
-          color="yellow"
-        />
-      </div>
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <AgeDistributionChart data={patientData}/>
-        <GenderDistribution data={patientData}/>
-
-      </div>
-      <RiskComparisonChart data={patientData}/>
-      <DiabetesDurationScatter data={patientData}/>
-      <BMICategoryBar data={patientData}/>
-      <NeuropathyPrevalenceChart data={patientData}/>
-    </div>
-  );
-
-  const PatientContent = () => (
-    <div className="space-y-6">
-      <PatientTable patientData={patientData} />
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-gray-50">
-      <NavBar />
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        {activeTab === "dashboard" && <DashboardContent />}
-        {activeTab === "patients" && <PatientContent />}
-        {activeTab === "reports" && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Reports</h2>
-            <p className="text-gray-600">
-              Report generation features coming soon...
-            </p>
-          </div>
-        )}
-        {activeTab === "analytics" && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Advanced Analytics
-            </h2>
-            <p className="text-gray-600">
-              Advanced analytics features coming soon...
-            </p>
-          </div>
-        )}
+      <main className="max-w-7xl mx-auto px-6 py-8 space-y-6">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatsCard
+            title="Total Patients"
+            value={patientData.length}
+            subtitle="Active cases"
+            color="blue"
+          />
+          <StatsCard
+            title="Average Age"
+            value={Math.round(
+              patientData.reduce(
+                (sum, p) => sum + calculateAge(p.allgemeineDaten.geburtsdatum),
+                0
+              ) / patientData.length
+            )}
+            subtitle="Years"
+            color="green"
+          />
+          <StatsCard
+            title="High Risk Cases"
+            value={high}
+            subtitle="Type VI-VII"
+            color="red"
+          />
+          <StatsCard
+            title="Diabetes Type 2"
+            value={
+              patientData.filter(
+                (p) => p.allgemeineDaten.diabetestyp === "typ 2"
+              ).length
+            }
+            subtitle="Patients"
+            color="yellow"
+          />
+        </div>
+
+        {/* Mini Charts */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ChartWrapper
+            title="Age Distribution"
+            isOpen={showAgeChart}
+            toggle={() => setShowAgeChart((prev) => !prev)}
+            summaryContent={
+              <p className="text-gray-600">
+                Avg Age: <strong>{avgAge}</strong> &nbsp;|&nbsp; Age Range:{" "}
+                <strong>
+                  {minAge}-{maxAge}
+                </strong>
+              </p>
+            }
+          >
+            <AgeDistributionChart data={patientData} />
+          </ChartWrapper>
+
+          <ChartWrapper
+            title="Gender Distribution"
+            isOpen={showGenderChart}
+            toggle={() => setShowGenderChart((prev) => !prev)}
+            summaryContent={
+              <p className="text-gray-600">
+                Male: <strong>{maleCount}</strong> | Female:{" "}
+                <strong>{femaleCount}</strong>
+              </p>
+            }
+          >
+            <GenderDistribution data={patientData} />
+          </ChartWrapper>
+
+          <ChartWrapper
+            title="Risk Type Distribution by Foot"
+            isOpen={showRiskChart}
+            toggle={() => setShowRiskChart((prev) => !prev)}
+            fullWidth
+            summaryContent={
+              <p className="text-gray-600">
+                High: <strong>{high}</strong> | Medium:{" "}
+                <strong>{medium}</strong> | Low: <strong>{low}</strong>
+              </p>
+            }
+          >
+            <RiskComparisonChart data={patientData} />
+          </ChartWrapper>
+        </div>
+
+        {/* View More */}
+        <div className="text-center">
+          <button
+            onClick={() => navigate("/analytics")}
+            className="mt-6 inline-block px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
+          >
+            View More Analytics
+          </button>
+        </div>
+
+        {/* Patient ID Navigation */}
+        <div className="flex flex-col md:flex-row items-center gap-4">
+          <input
+            type="text"
+            placeholder="Enter Patient ID"
+            value={patientId}
+            onChange={(e) => setPatientId(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-md w-full md:w-auto"
+          />
+          <button
+            onClick={() => {
+              if (patientId.trim()) {
+                navigate(`/patientDetails/${patientId.trim()}`);
+              }
+            }}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+          >
+            Go to Patient
+          </button>
+        </div>
       </main>
     </div>
   );
