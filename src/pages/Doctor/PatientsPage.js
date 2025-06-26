@@ -8,18 +8,18 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import StatsCard from "../components/StatsCard";
-import { useLatestPatients } from "../hooks/useLatestPatients";
-import mockData from "../data/mockData.json";
-import PatientTable from "../components/PatientsTable";
-import { calculateAge } from "../utils/calculateAge";
-import DiabetesDurationScatter from "../components/DiabetesDurationScatter";
-import BMICategoryBar from "../components/BMICategoryBar";
-import GenderDistribution from "../components/GenderDistribution";
-import { highRiskCount } from "../utils/highRiskCount";
-import AgeDistributionChart from "../components/AgeDistributionChart";
-import RiskComparisonChart from "../components/RiskComparisionChart";
-import NeuropathyPrevalenceChart from "../components/NeuropathyPrevalenceChart";
+import StatsCard from "../../components/StatsCard";
+import { useLatestPatients } from "../../hooks/useLatestPatients";
+import mockData from "../../data/mockData.json";
+import PatientTable from "../../components/PatientsTable";
+import { calculateAge } from "../../utils/calculateAge";
+import DiabetesDurationScatter from "../../components/DiabetesDurationScatter";
+import BMICategoryBar from "../../components/BMICategoryBar";
+import GenderDistribution from "../../components/GenderDistribution";
+import { highRiskCount } from "../../utils/highRiskCount";
+import AgeDistributionChart from "../../components/AgeDistributionChart";
+import RiskComparisonChart from "../../components/RiskComparisionChart";
+import NeuropathyPrevalenceChart from "../../components/NeuropathyPrevalenceChart";
 
 const PatientsPage = () => {
   const [activeTab, setActiveTab] = useState("dashboard");

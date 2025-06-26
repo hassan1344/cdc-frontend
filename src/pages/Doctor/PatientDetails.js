@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import mockData from "../data/mockData.json";
-import { calculateAge } from "../utils/calculateAge";
+import mockData from "../../data/mockData.json";
+import { calculateAge } from "../../utils/calculateAge";
 
 const PatientDetails = () => {
   const { id } = useParams();

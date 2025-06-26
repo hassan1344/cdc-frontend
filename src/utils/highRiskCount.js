@@ -6,11 +6,11 @@ export function highRiskCount(patientData) {
     const right = kategorisierung?.rechtsRisikotyp || "";
 
     [left, right].forEach((side) => {
-      if (/VI|VII/.test(side)) {
+      if (/III|IV|V|VI|VII/.test(side)) {
         high++;
-      } else if (/III|IV|V/.test(side)) {
+      } else if (/II|I/.test(side)) {
         medium++;
-      } else if (/0|I|II/.test(side)) {
+      } else if (/0/.test(side)) {
         low++;
       }
     });

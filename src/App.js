@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./components/NavBar";
-import Dashboard from "./pages/Dashboard";
-import PatientsPage from "./pages/PatientsPage";
-import ReportsPage from "./pages/ReportsPage";
-import AnalyticsPage from "./pages/AnalyticsPage";
-import PatientDetails from "./pages/PatientDetails"
+import Dashboard from "./pages/Doctor/Dashboard";
+import PatientsPage from "./pages/Doctor/PatientsPage";
+import ReportsPage from "./pages/Doctor/ReportsPage";
+import AnalyticsPage from "./pages/Doctor/AnalyticsPage";
+import PatientDetails from "./pages/Doctor/PatientDetails"
 
 const App = () => {
   return (

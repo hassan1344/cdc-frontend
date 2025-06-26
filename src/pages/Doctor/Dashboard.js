@@ -1,14 +1,14 @@
 import React, { useState, useMemo } from "react";
-import StatsCard from "../components/StatsCard";
-import { useLatestPatients } from "../hooks/useLatestPatients";
-import mockData from "../data/mockData.json";
-import { calculateAge } from "../utils/calculateAge";
-import { highRiskCount } from "../utils/highRiskCount";
-import AgeDistributionChart from "../components/AgeDistributionChart";
-import GenderDistribution from "../components/GenderDistribution";
-import RiskComparisonChart from "../components/RiskComparisionChart";
+import StatsCard from "../../components/StatsCard";
+import { useLatestPatients } from "../../hooks/useLatestPatients";
+import mockData from "../../data/mockData.json";
+import { calculateAge } from "../../utils/calculateAge";
+import { highRiskCount } from "../../utils/highRiskCount";
+import AgeDistributionChart from "../../components/AgeDistributionChart";
+import GenderDistribution from "../../components/GenderDistribution";
+import RiskComparisonChart from "../../components/RiskComparisionChart";
 import { useNavigate } from "react-router-dom";
-import ChartWrapper from "../components/ChartWrapper";
+import ChartWrapper from "../../components/ChartWrapper";
 
 const Dashboard = () => {
   const [showAgeChart, setShowAgeChart] = useState(false);
