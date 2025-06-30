@@ -1,14 +1,21 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
     console.log("Login data:", { email, password });
     // Add API call here
+
+    if (email.includes("doctor")) {
+      navigate("/doctor/dashboard");
+    } else {
+      navigate(`/patient/patientDashboard/${password}`);
+    }
   };
 
   return (

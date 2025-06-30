@@ -1,17 +1,8 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import {
-  User,
-  Bell,
-  Settings,
-  Home,
-  FileText,
-  TrendingUp,
-  Users,
-  LogOut,
-} from "lucide-react";
+import { Home, FileText, User, LogOut } from "lucide-react";
 
-const NavBar = () => {
+const PatientNavBar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -22,7 +13,7 @@ const NavBar = () => {
   const navLinkClass = ({ isActive }) =>
     `flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
       isActive
-        ? "bg-blue-100 text-blue-700"
+        ? "bg-green-100 text-green-700"
         : "text-gray-600 hover:text-gray-900"
     }`;
 
@@ -32,31 +23,18 @@ const NavBar = () => {
         <div className="flex items-center space-x-8">
           <h1 className="text-2xl font-bold text-gray-900">Shooo</h1>
           <div className="flex space-x-6">
-            <NavLink to="/doctor/dashboard" className={navLinkClass}>
+            <NavLink to="/patient/patientDashboard/1" className={navLinkClass}>
               <Home size={18} />
               <span>Dashboard</span>
             </NavLink>
-            <NavLink to="/doctor/patients" className={navLinkClass}>
-              <Users size={18} />
-              <span>Patients</span>
-            </NavLink>
-            <NavLink to="/doctor/reports" className={navLinkClass}>
+            <NavLink to="/patient/questionnaire" className={navLinkClass}>
               <FileText size={18} />
-              <span>Reports</span>
-            </NavLink>
-            <NavLink to="/doctor/analytics" className={navLinkClass}>
-              <TrendingUp size={18} />
-              <span>Analytics</span>
+              <span>Questionnaire</span>
             </NavLink>
           </div>
         </div>
+
         <div className="flex items-center space-x-4">
-          <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-            <Bell size={20} />
-          </button>
-          <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
-            <Settings size={20} />
-          </button>
           <button
             onClick={handleLogout}
             className="p-2 text-red-400 hover:text-red-600 transition-colors"
@@ -64,12 +42,13 @@ const NavBar = () => {
           >
             <LogOut size={20} />
           </button>
+
           <div className="flex items-center space-x-3 pl-3 border-l border-gray-200">
             <div className="text-right">
-              <p className="text-sm font-medium text-gray-900">Dr. Smith</p>
-              <p className="text-xs text-gray-500">Podiatrist</p>
+              <p className="text-sm font-medium text-gray-900">John Doe</p>
+              <p className="text-xs text-gray-500">Patient</p>
             </div>
-            <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
+            <div className="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center">
               <User size={16} className="text-white" />
             </div>
           </div>
@@ -79,4 +58,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default PatientNavBar;

@@ -10,28 +10,17 @@ import {
 } from "lucide-react";
 import footGraphic1 from "../../images/footGraphic1.png";
 import footGraphic2 from "../../images/footGraphic2.png";
+import useSpeech from "../../hooks/useSpeech";
 
 const MOSQuestionnaire = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [responses, setResponses] = useState({});
   const [showValidationErrors, setShowValidationErrors] = useState(false);
-  const [voices, setVoices] = useState([]);
+  const speak = useSpeech();
 
   useEffect(() => {
     setShowValidationErrors(false); // Reset validation errors when responses change
   }, [responses]);
-  useEffect(() => {
-    // Load voices - sometimes voices load asynchronously
-    const loadVoices = () => {
-      const availableVoices = window.speechSynthesis.getVoices();
-      setVoices(availableVoices);
-    };
-
-    loadVoices();
-
-    // Some browsers need this event to fire before voices load
-    window.speechSynthesis.onvoiceschanged = loadVoices;
-  }, []);
 
   // Pre-assessment sections
   const preAssessmentSections = [
@@ -456,7 +445,6 @@ const MOSQuestionnaire = () => {
   const validateSectionCompletion = (section) => {
     const visibleQuestions = getVisibleQuestions(section);
 
-    // ✅ Treat section as complete if all questions are hidden
     if (visibleQuestions.length === 0) return true;
 
     return visibleQuestions.every((question) => {
@@ -489,75 +477,73 @@ const MOSQuestionnaire = () => {
     const showError = showValidationErrors && !isAnswered;
 
     const woundZones = [
-        //Medial
-        { id: "VRM", top: "18%", left: "7%" },
-        { id: "MRM", top: "17%", left: "22%" },
-        { id: "RRM", top: "18%", left: "38%" },
-        { id: "RLM", top: "18%", left: "57%" },
-        { id: "MLM", top: "17%", left: "71%" },
-        { id: "VLM", top: "18%", left: "88%" },
+      //Medial
+      { id: "VRM", top: "18%", left: "7%" },
+      { id: "MRM", top: "17%", left: "22%" },
+      { id: "RRM", top: "18%", left: "38%" },
+      { id: "RLM", top: "18%", left: "57%" },
+      { id: "MLM", top: "17%", left: "71%" },
+      { id: "VLM", top: "18%", left: "88%" },
 
-        //lateral
-        { id: "RRL", top: "30%", left: "9%" },
-        { id: "MRL", top: "36%", left: "25%" },
-        { id: "VRL", top: "40%", left: "40%" },
-        { id: "VLL", top: "40%", left: "56%" },
-        { id: "MLL", top: "36%", left: "72%" },
-        { id: "RLL", top: "30%", left: "86%" },
+      //lateral
+      { id: "RRL", top: "30%", left: "9%" },
+      { id: "MRL", top: "36%", left: "25%" },
+      { id: "VRL", top: "40%", left: "40%" },
+      { id: "VLL", top: "40%", left: "56%" },
+      { id: "MLL", top: "36%", left: "72%" },
+      { id: "RLL", top: "30%", left: "86%" },
 
-        //plantar Right
-        { id: "RPD5", top: "59%", left: "5%" },
-        { id: "RPD4", top: "57.5%", left: "9%" },
-        { id: "RPD3", top: "56%", left: "12%" },
-        { id: "RPD2", top: "55%", left: "16%" },
-        { id: "RPD1", top: "54%", left: "22%" },
-        { id: "RPM5", top: "63%", left: "7%" },
-        { id: "RPM4", top: "61%", left: "10%" },
-        { id: "RPM3", top: "60%", left: "13.5%" },
-        { id: "RPM2", top: "59%", left: "17%" },
-        { id: "RPM1", top: "60%", left: "21%" },
-        { id: "RPB5", top: "78%", left: "9%" },
-        { id: "RPFerse", top: "88%", left: "15%" },
+      //plantar Right
+      { id: "RPD5", top: "59%", left: "5%" },
+      { id: "RPD4", top: "57.5%", left: "9%" },
+      { id: "RPD3", top: "56%", left: "12%" },
+      { id: "RPD2", top: "55%", left: "16%" },
+      { id: "RPD1", top: "54%", left: "22%" },
+      { id: "RPM5", top: "63%", left: "7%" },
+      { id: "RPM4", top: "61%", left: "10%" },
+      { id: "RPM3", top: "60%", left: "13.5%" },
+      { id: "RPM2", top: "59%", left: "17%" },
+      { id: "RPM1", top: "60%", left: "21%" },
+      { id: "RPB5", top: "78%", left: "9%" },
+      { id: "RPFerse", top: "88%", left: "15%" },
 
-                //plantar Left
-        { id: "LPD5", top: "59%", left: "48%" },
-        { id: "LPD4", top: "57.5%", left: "45%" },
-        { id: "LPD3", top: "56%", left: "41%" },
-        { id: "LPD2", top: "55%", left: "37%" },
-        { id: "LPD1", top: "54%", left: "32%" },
-        { id: "LPM5", top: "63%", left: "47%" },
-        { id: "LPM4", top: "61%", left: "44%" },
-        { id: "LPM3", top: "60%", left: "40%" },
-        { id: "LPM2", top: "59%", left: "36%" },
-        { id: "LPM1", top: "60%", left: "32%" },
-        { id: "LPB5", top: "78%", left: "44%" },
-        { id: "LPFerse", top: "88%", left: "37%" },
+      //plantar Left
+      { id: "LPD5", top: "59%", left: "48%" },
+      { id: "LPD4", top: "57.5%", left: "45%" },
+      { id: "LPD3", top: "56%", left: "41%" },
+      { id: "LPD2", top: "55%", left: "37%" },
+      { id: "LPD1", top: "54%", left: "32%" },
+      { id: "LPM5", top: "63%", left: "47%" },
+      { id: "LPM4", top: "61%", left: "44%" },
+      { id: "LPM3", top: "60%", left: "40%" },
+      { id: "LPM2", top: "59%", left: "36%" },
+      { id: "LPM1", top: "60%", left: "32%" },
+      { id: "LPB5", top: "78%", left: "44%" },
+      { id: "LPFerse", top: "88%", left: "37%" },
 
+      //dorsal Right
+      { id: "RDD5", top: "82%", left: "52%" },
+      { id: "RDD4", top: "84.5%", left: "56%" },
+      { id: "RDD3", top: "86%", left: "59%" },
+      { id: "RDD2", top: "87%", left: "63%" },
+      { id: "RDD1", top: "89%", left: "68%" },
+      { id: "RDM5", top: "72%", left: "55%" },
+      { id: "RDM4", top: "74%", left: "58%" },
+      { id: "RDM3", top: "76%", left: "60.5%" },
+      { id: "RDM2", top: "79%", left: "64%" },
+      { id: "RDM1", top: "80%", left: "68%" },
 
-                //dorsal Right
-        { id: "RDD5", top: "82%", left: "52%" },
-        { id: "RDD4", top: "84.5%", left: "56%" },
-        { id: "RDD3", top: "86%", left: "59%" },
-        { id: "RDD2", top: "87%", left: "63%" },
-        { id: "RDD1", top: "89%", left: "68%" },
-        { id: "RDM5", top: "72%", left: "55%" },
-        { id: "RDM4", top: "74%", left: "58%" },
-        { id: "RDM3", top: "76%", left: "60.5%" },
-        { id: "RDM2", top: "79%", left: "64%" },
-        { id: "RDM1", top: "80%", left: "68%" },
-
-                //dorsal Left
-        { id: "LDD5", top: "82%", left: "95%" },
-        { id: "LDD4", top: "83.5%", left: "91%" },
-        { id: "LDD3", top: "85%", left: "87%" },
-        { id: "LDD2", top: "87%", left: "84%" },
-        { id: "LDD1", top: "89%", left: "79%" },
-        { id: "LDM5", top: "72%", left: "93%" },
-        { id: "LDM4", top: "74%", left: "90%" },
-        { id: "LDM3", top: "76%", left: "86%" },
-        { id: "LDM2", top: "79%", left: "84%" },
-        { id: "LDM1", top: "80%", left: "79%" },
-
+      //dorsal Left
+      { id: "LDD5", top: "82%", left: "95%" },
+      { id: "LDD4", top: "83.5%", left: "91%" },
+      { id: "LDD3", top: "85%", left: "87%" },
+      { id: "LDD2", top: "87%", left: "84%" },
+      { id: "LDD1", top: "89%", left: "79%" },
+      { id: "LDM5", top: "72%", left: "93%" },
+      { id: "LDM4", top: "74%", left: "90%" },
+      { id: "LDM3", top: "76%", left: "86%" },
+      { id: "LDM2", top: "79%", left: "84%" },
+      { id: "LDM1", top: "80%", left: "79%" },
     ];
 
     return (
@@ -758,21 +744,7 @@ const MOSQuestionnaire = () => {
   };
 
   const handleReadAloud = (text) => {
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-
-    // Pick a German voice, fallback to default if none found
-    const germanVoices = voices.filter((voice) => voice.lang.startsWith("de"));
-    if (germanVoices.length > 0) {
-      utterance.voice = germanVoices[0]; // choose first German voice
-    }
-
-    utterance.rate = 0.8; // slow down the speech
-    utterance.pitch = 1; // normal pitch
-    utterance.volume = 1; // full volume
-
-    window.speechSynthesis.speak(utterance);
+    speak(text);
   };
 
   const currentSection = preAssessmentSections[currentStep];
