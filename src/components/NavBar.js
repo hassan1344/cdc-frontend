@@ -40,9 +40,9 @@ const NavBar = () => {
               <Users size={18} />
               <span>Patients</span>
             </NavLink>
-            <NavLink to="/doctor/reports" className={navLinkClass}>
+            <NavLink to="/doctor/diagnostic" className={navLinkClass}>
               <FileText size={18} />
-              <span>Reports</span>
+              <span>Diagnostic Sheet</span>
             </NavLink>
             <NavLink to="/doctor/analytics" className={navLinkClass}>
               <TrendingUp size={18} />

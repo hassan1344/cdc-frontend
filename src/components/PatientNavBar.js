@@ -23,7 +23,7 @@ const PatientNavBar = () => {
         <div className="flex items-center space-x-8">
           <h1 className="text-2xl font-bold text-gray-900">Shooo</h1>
           <div className="flex space-x-6">
-            <NavLink to="/patient/patientDashboard/1" className={navLinkClass}>
+            <NavLink to="/patient/patientDashboard" className={navLinkClass}>
               <Home size={18} />
               <span>Dashboard</span>
             </NavLink>

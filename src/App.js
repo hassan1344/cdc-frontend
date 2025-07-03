@@ -15,6 +15,8 @@ import MOSQuestionnaire2 from "./pages/Patient/MOSQuestionnaire2";
 
 import LoginPage from "./pages/Auth/LoginPage";
 import SignupPage from "./pages/Auth/SignupPage";
+import Questionnaire from "./pages/Patient/Questionnaires";
+import DiagnosticSheet from "./pages/Doctor/DiagnosticSheet";
 
 const App = () => {
   return (
@@ -29,15 +31,17 @@ const App = () => {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="patients" element={<PatientsPage />} />
           <Route path="reports" element={<ReportsPage />} />
+          <Route path="diagnostic" element={<DiagnosticSheet />} />
           <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="patientDetails/:id" element={<PatientDetails />} />
         </Route>
 
         {/* Patient Routes */}
         <Route path="/patient" element={<PatientLayout />}>
-          <Route path="patientDashboard/:id" element={<PatientDashboard />} />
-          <Route path="questionnaire" element={<MOSQuestionnaire />} />
-          <Route path="questionnaire2" element={<MOSQuestionnaire2 />} />
+          <Route path="patientDashboard" element={<PatientDashboard />} />
+          <Route path="questionnaire" element={<Questionnaire />} />
+          <Route path="mosQuestionnaire1" element={<MOSQuestionnaire />} />
+          <Route path="mosQuestionnaire2" element={<MOSQuestionnaire2 />} />
         </Route>
       </Routes>
     </Router>
