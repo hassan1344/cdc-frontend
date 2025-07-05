@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { usePatient } from "../../context/PatientContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +15,10 @@ const LoginPage = () => {
     if (email.includes("doctor")) {
       navigate("/doctor/dashboard");
     } else {
-      navigate(`/patient/patientDashboard/${password}`);
+      //Change
+      localStorage.setItem("patientId", password);
+
+      navigate(`/patient/patientDashboard`);
     }
   };
 

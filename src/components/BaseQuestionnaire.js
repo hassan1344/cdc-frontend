@@ -27,7 +27,7 @@ const BaseQuestionnaire = ({
     if (savedResponses) {
       const restoredState = mapResponsesToState(savedResponses, sections);
       setResponses(restoredState);
-      
+
       // Optionally set the current step to the first incomplete section
       const incompleteSection = findFirstIncompleteSection(restoredState);
       if (incompleteSection !== -1) {
@@ -42,7 +42,7 @@ const BaseQuestionnaire = ({
     for (let i = 0; i < sections.length; i++) {
       const section = sections[i];
       const visibleQuestions = getVisibleQuestions(section, responseState);
-      
+
       const isComplete = visibleQuestions.every((question) => {
         const response = responseState[question.id];
         if (question.type === "checkbox") {
@@ -50,7 +50,7 @@ const BaseQuestionnaire = ({
         }
         return response !== undefined && response !== null && response !== "";
       });
-      
+
       if (!isComplete) {
         return i;
       }
@@ -60,7 +60,9 @@ const BaseQuestionnaire = ({
 
   // Modified to accept optional responseState parameter
   const getVisibleQuestions = (section, responseState = responses) => {
-    return section.questions.filter(question => shouldShowQuestion(question, responseState));
+    return section.questions.filter((question) =>
+      shouldShowQuestion(question, responseState)
+    );
   };
 
   const shouldShowQuestion = (question, responseState = responses) => {
@@ -126,7 +128,10 @@ const BaseQuestionnaire = ({
   useEffect(() => {
     if (onSave && Object.keys(responses).length > 0) {
       const timeoutId = setTimeout(() => {
-        const formattedResponse = handleQuestionnaireComplete(responses, sections);
+        const formattedResponse = handleQuestionnaireComplete(
+          responses,
+          sections
+        );
         onSave(formattedResponse);
       }, 10000); // Auto-save after 10 seconds of inactivity
 
@@ -190,17 +195,11 @@ const BaseQuestionnaire = ({
             break;
 
           case "checkbox":
-            const selectedIndices = Array.isArray(responseValue)
-              ? responseValue.map(value => 
-                  question.options.findIndex(opt => opt.text === value)
-                ).filter(index => index >= 0)
-              : [];
             const selectedValues = Array.isArray(responseValue)
               ? responseValue
               : [];
 
-            baseResponse.selectedOptions = selectedIndices;
-            baseResponse.selectedValues = selectedValues;
+            baseResponse.selectedOptions = selectedValues;
             baseResponse.selectedOption = null;
             baseResponse.selectedValue = null;
             break;
@@ -213,7 +212,7 @@ const BaseQuestionnaire = ({
 
           case "wounds_image":
             baseResponse.selectedOption = null;
-            baseResponse.selectedValue = responseValue;
+            baseResponse.selectedValues = responseValue;
             break;
 
           default:
@@ -236,8 +235,7 @@ const BaseQuestionnaire = ({
     );
 
     const finalResponse = {
-      patientencode: patientencode,
-      questionnaireType: subtitle,
+      patient_id: savedResponses.patient_id,
       responses: formattedResponses,
     };
 

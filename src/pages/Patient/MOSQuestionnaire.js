@@ -1,112 +1,40 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import BaseQuestionnaire from "../../components/BaseQuestionnaire";
 import { preAssessmentQuestions } from "../../data/questionData";
+import { updateQuestionnaire } from "../../api/api";
 
 const MOSQuestionnaire = () => {
   const [savedResponses, setSavedResponses] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const patientId = "365693801";
+  const location = useLocation();
+  const navigate = useNavigate();
+  const questionnaire = location.state;
 
-  const handleSave = (responses) => {
-    alert("Fragebogen saved!");
-    console.log("Pre-assessment responses:", responses);
-  };
+  useEffect(() => {
+    if (!questionnaire) {
+      navigate("/questionnaires"); // fallback
+    } else {
+      setSavedResponses(questionnaire);
+    }
+  }, [questionnaire]);
+
 
   const handleComplete = (responses) => {
     alert("Fragebogen abgeschlossen!");
     console.log("Pre-assessment responses:", responses);
   };
 
-  const sampleSavedResponses = {
-    patientencode: "365693801",
-    questionnaireType: "Vorerhebung",
-    responses: [
-      {
-        questionNumber: 1,
-        questionId: "walking_distance_pre",
-        sectionId: "A",
-        responseType: "radio",
-        icfCode: "ICF: d450 Gehen",
-        selectedOption: 1,
-      },
-      {
-        questionNumber: 2,
-        questionId: "conditions",
-        sectionId: "A",
-        responseType: "checkbox",
-        icfCode: null,
-        selectedOptions: [1],
-        selectedValues: ["Rheumatoide Arthritis"],
-        selectedOption: null,
-        selectedValue: null,
-      },
-      {
-        questionNumber: 3,
-        questionId: "wounds",
-        sectionId: "B",
-        responseType: "radio",
-        icfCode: "ICF: b810 Schutzfunktion der Haut",
-        selectedOption: 0,
-      },
-              {
-            questionNumber: 4,
-            questionId: "wounds_image",
-            sectionId: "B",
-            responseType: "wounds_image",
-            icfCode: null,
-            selectedOption: null,
-            selectedValue: [
-                "LPD5",
-                "LPD4",
-                "LPD3"
-            ]
-        }
-    ],
-  };
+const handleSave = async (responses) => {
+  try {
+    const payload = responses;
 
-  // useEffect(() => {
-  //   const loadSavedResponses = async () => {
-  //     try {
-  //       // Replace this with your actual API call to fetch saved responses
-  //       const response = await fetch(`/api/questionnaire/draft/${patientId}`);
-
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         setSavedResponses(data);
-  //       } else {
-  //         // No saved responses found, start fresh
-  //         setSavedResponses(null);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error loading saved responses:", error);
-  //       setSavedResponses(null);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   if (patientId) {
-  //     loadSavedResponses();
-  //   } else {
-  //     setIsLoading(false);
-  //   }
-  // }, [patientId]);
-
-  //   const handleSave = async (responses) => {
-  //   try {
-  //     await fetch(`/api/questionnaire/draft/${patientId}`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(responses),
-  //     });
-  //     console.log('Draft saved successfully');
-  //   } catch (error) {
-  //     console.error('Error saving draft:', error);
-  //   }
-  // };
-
+    await updateQuestionnaire(questionnaire.id, payload);
+    console.log("Draft saved successfully");
+  } catch (error) {
+    console.error("Error saving draft:", error);
+  }
+};
   //   const handleComplete = async (responses) => {
   //   try {
   //     // Save final responses
@@ -149,10 +77,10 @@ const MOSQuestionnaire = () => {
       sections={preAssessmentQuestions}
       title="MOS Questionnaire"
       subtitle="Vorerhebung"
-      patientencode = {patientId}
+      patientencode={questionnaire.patient_id}
       onComplete={handleComplete}
       headerConfig={{ acronym: "MOS" }}
-      savedResponses={sampleSavedResponses}
+      savedResponses={savedResponses}
       onSave={handleSave}
     />
   );
