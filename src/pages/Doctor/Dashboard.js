@@ -152,7 +152,7 @@ const Dashboard = () => {
         {/* View More */}
         <div className="text-center">
           <button
-            onClick={() => navigate("/analytics")}
+            onClick={() => navigate("/doctor/analytics")}
             className="mt-6 inline-block px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
           >
             View More Analytics
@@ -171,7 +171,7 @@ const Dashboard = () => {
           <button
             onClick={() => {
               if (patientId.trim()) {
-                navigate(`/patientDetails/${patientId.trim()}`);
+                navigate(`/doctor/patientDetails/${patientId.trim()}`);
               }
             }}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
