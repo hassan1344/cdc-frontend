@@ -1,22 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import { logIn } from "../../api/api.js";
+import { calculateAge } from "../../utils/calculateAge.js";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+ const handleLogin = async (e) => {
     e.preventDefault();
     console.log("Login data:", { email, password });
-    // Add API call here
 
-    if (email.includes("doctor")) {
-      navigate("/doctor/dashboard");
-    } else {
-      localStorage.setItem("patientId", password);
-      navigate(`/patient/patientDashboard`);
+    try {
+      const data = await logIn({ email, password });
+
+      if (data) {
+        console.log(data.data);
+
+        if (data.data.user.role==="doctor") {
+          navigate("/doctor/dashboard");
+        } else {
+          localStorage.setItem("patientId", data.data.id);
+          navigate(`/patient/patientDashboard`);
+        }
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
     }
   };
 

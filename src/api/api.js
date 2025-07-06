@@ -27,3 +27,23 @@ export const updateQuestionnaire = async (questionnaireId, payload) => {
     throw error;
   }
 };
+
+export const signUp = async (payload) => {
+  try {
+    const response = await api.post('auth/signup', payload);
+    return response.data;
+  } catch (error) {
+    console.error("Error Signing Up", error);
+    throw error;
+  }
+};
+
+export const logIn = async (payload) => {
+  try {
+    const response = await api.post('/auth/login', payload);
+    return response.data;
+  } catch (error) {
+    console.error("Error Loggin In", error);
+    throw error;
+  }
+};

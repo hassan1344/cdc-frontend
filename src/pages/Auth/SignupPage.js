@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaLock, FaIdCard } from "react-icons/fa";
+import { signUp } from "../../api/api.js";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +11,7 @@ const SignupPage = () => {
     password: "",
     confirmPassword: "",
   });
-
+  const navigate= useNavigate();
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -39,21 +40,21 @@ const SignupPage = () => {
       return;
     }
 
-    try {
-      const response = await fetch("http://localhost:5000/api/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, name, email, password }),
-      });
+     const payload = {
+      email,
+      name,
+      id,
+      password,
+      role: "patient", // fixed role
+    };
 
-      if (!response.ok) {
-        const data = await response.json();
-        setError(data.message || "Signup failed.");
-      } else {
-        alert("Signup successful!");
-      }
+    try {
+      const result = await signUp(payload);
+      alert("Signup successful!");
+      console.log("Signup response:", result);
+      navigate("/");
     } catch (err) {
-      setError("Something went wrong. Please try again later.");
+      setError(err.message || "Something went wrong. Please try again later.");
     }
   };
 

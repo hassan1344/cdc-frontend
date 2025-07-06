@@ -2,6 +2,8 @@ import React, { useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import mockData from "../../data/mockData.json";
 import PatientDetailsModal from "../../components/PatientDetailsModal";
+import QuestionnaireTable from "../../components/QuestionnaireTable";
+
 
 const PatientDetails = () => {
   const { id } = useParams();
@@ -65,10 +67,9 @@ const PatientDetails = () => {
           {activeTab === "details" && <PatientDetailsModal entries={entries} />}
 
           {activeTab === "questionnaires" && (
-            <div>
-              <h2 className="text-xl font-bold mb-2">Questionnaires</h2>
-              <p>Questionnaire section content goes here... Add a component</p>
-            </div>
+            <>
+              <QuestionnaireTable />
+            </>
           )}
 
           {activeTab === "diagnostic" && (
