@@ -1,0 +1,18 @@
+stages:
+  - deploy
+
+deploy_dev:
+  stage: deploy
+  tags:
+    - ci-cd-job-runner
+  only:
+    - main
+  before_script:
+    - echo "== BEFORE SCRIPT START =="
+    - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+
+  script:
+    - ssh -o StrictHostKeyChecking=no pg06-web@pg06.regifor.de 'bash /home/deploy_scripts/deploy_frontend.sh'
