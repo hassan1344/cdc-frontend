@@ -1,37 +1,50 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaLock, FaIdBadge } from "react-icons/fa";
+import { toast } from "react-toastify";
 import { logIn } from "../../api/api.js";
 
 const LoginPage = () => {
-  const [role, setRole] = useState("doctor"); // "doctor" or "patient"
+  const [role, setRole] = useState("doctor");
   const [emailOrId, setEmailOrId] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    if (!emailOrId.trim() || !password.trim()) {
+      toast.dismiss();
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
     const credentials =
       role === "doctor"
         ? { email: emailOrId, password }
         : { id: emailOrId, password };
 
-    console.log("Login data:", credentials);
-
     try {
       const data = await logIn(credentials);
 
-      if (data) {
-        console.log(data.data);
+      if (data && data.data && data.data.user) {
+        toast.dismiss();
+        toast.success("Login successful!");
+
         if (data.data.user.role === "doctor") {
           navigate("/doctor/dashboard");
         } else {
           localStorage.setItem("patientId", data.data.id);
-          navigate(`/patient/patientDashboard`);
+          navigate("/patient/patientDashboard");
         }
+      } else {
+        toast.dismiss();
+        toast.error("Login failed. Please try again.");
       }
     } catch (error) {
-      console.error("Login failed:", error);
+      toast.dismiss();
+      toast.error("Login failed. Please try again.");
+      console.error("Login error:", error);
     }
   };
 
@@ -48,7 +61,6 @@ const LoginPage = () => {
           </p>
         </div>
 
-        {/* Role switcher */}
         <div className="flex justify-center gap-4 mb-6">
           <button
             onClick={() => setRole("doctor")}
