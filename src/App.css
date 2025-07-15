@@ -36,3 +36,17 @@
     transform: rotate(360deg);
   }
 }
+
+.card-container {
+  width: 100%;
+  max-width: 95rem;
+  margin: 5rem auto;
+  background-color: white;
+  border: 1px solid #d1d5db; /* Tailwind's gray-300 */
+  border-radius: 1rem;        /* equivalent to rounded-xl */
+  padding: 1.5rem;            /* equivalent to p-6 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;                  /* equivalent to space-y-4 */
+}
