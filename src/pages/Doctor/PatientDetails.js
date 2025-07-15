@@ -1,11 +1,14 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import mockData from "../../data/mockData.json";
-import { calculateAge } from "../../utils/calculateAge";
+import PatientDetailsModal from "../../components/PatientDetailsModal";
+import QuestionnaireTable from "../../components/QuestionnaireTable";
+
 
 const PatientDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("details");
 
   const allPatientData = useMemo(() => autoParseJsonStrings(mockData), []);
   const entries = allPatientData.filter(
@@ -28,95 +31,55 @@ const PatientDetails = () => {
     );
   }
 
-  const generalInfo = entries[0].allgemeineDaten || "{}";
-  const age = calculateAge(generalInfo.geburtsdatum);
-
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8">
+    <div className="max-w-6xl mx-auto px-6 py-8">
       <div className="mb-6">
         <button
           onClick={() => navigate(-1)}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 mb-4"
         >
-          ← Back to Dashboard
+          ← Zurück
         </button>
+        <h1 className="text-3xl font-bold text-gray-800">
+          Patient Details: {id}
+        </h1>
       </div>
-
-      <h1 className="text-2xl font-bold mb-4">Patient Details: {id}</h1>
-
-      {/* General Info */}
-      <div className="bg-white shadow rounded-lg p-4 mb-6">
-        <h2 className="text-xl font-semibold mb-2">General Information</h2>
-        <p>Age: <strong>{age}</strong></p>
-        <p>Geschlecht: <strong>{generalInfo.geschlecht}</strong></p>
-        <p>Größe: <strong>{generalInfo.groeße} cm</strong></p>
-        <p>Gewicht: <strong>{generalInfo.gewicht} kg</strong></p>
-        <p>Diabetes Typ: <strong>{generalInfo.diabetestyp}</strong></p>
-        <p>Dauer der Diabetes: <strong>{generalInfo.dauerDiab} Jahre</strong></p>
-        <p>Diabetesschulung: <strong>{generalInfo.diabSchulung}</strong></p>
-        <p>MRSA: <strong>{generalInfo.mrsa}</strong></p>
-        <p>Letzte Untersuchung: <strong>{generalInfo.datum}</strong></p>
-      </div>
-
-      {/* Entries */}
-      {entries
-        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        .map((entry, index) => {
-          const klinisch = entry.klinischerBefund || "{}";
-          const kategorisierung = entry.kategorisierung || "{}";
-          const fussstatus = entry.fussstatus || "{}";
-          const funktionelleTests = entry.funktionelleTests || "{}";
-
-          return (
-            <div
-              key={index}
-              className="bg-white shadow rounded-lg p-4 mb-6 border-l-4 border-blue-500"
+      <div className="px-4 md:px-6 lg:px-8">
+        {/* Tabs Header */}
+        <div className="flex border-b mb-4">
+          {["details", "questionnaires", "diagnostic"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`mr-4 pb-2 px-2 border-b-2 ${
+                activeTab === tab
+                  ? "border-blue-500 font-semibold"
+                  : "border-transparent text-gray-500"
+              } capitalize`}
             >
-              <h3 className="text-lg font-semibold mb-2">
-                Untersuchung vom {new Date(entry.created_at).toLocaleDateString()}
-              </h3>
+              {tab}
+            </button>
+          ))}
+        </div>
 
-              {/* Risk Category */}
-              <div className="mb-3">
-                <p>
-                  Risikotyp Links:{" "}
-                  <strong>{kategorisierung.linksRisikotyp || "N/A"}</strong>
-                </p>
-                <p>
-                  Risikotyp Rechts:{" "}
-                  <strong>{kategorisierung.rechtsRisikotyp || "N/A"}</strong>
-                </p>
-              </div>
+        {/* Tab Content */}
+        <div>
+          {activeTab === "details" && <PatientDetailsModal entries={entries} />}
 
-              {/* Klinischer Befund */}
-              <div className="mb-3">
-                <h4 className="font-medium underline">Klinischer Befund</h4>
-                <p>Vibration Links: {klinisch.linksVibrationsempfindung}</p>
-                <p>Vibration Rechts: {klinisch.rechtsVibrationsempfindung}</p>
-                <p>Mikrofilament Links: {klinisch.linksMikrofilament}</p>
-                <p>Mikrofilament Rechts: {klinisch.rechtsMikrofilament}</p>
-              </div>
+          {activeTab === "questionnaires" && (
+            <>
+              <QuestionnaireTable />
+            </>
+          )}
 
-              {/* Fußstatus */}
-              <div className="mb-3">
-                <h4 className="font-medium underline">Fußstatus</h4>
-                <p>Links Ulcus: {fussstatus.linksUlcus}</p>
-                <p>Rechts Ulcus: {fussstatus.rechtsUlcus}</p>
-                <p>Podologische Behandlung: {fussstatus.podologischeBehandlung}</p>
-                <p>Letzte Behandlung: {fussstatus.letztePodoBehandlung}</p>
-              </div>
-
-              {/* Funktionelle Tests */}
-              <div>
-                <h4 className="font-medium underline">Funktionelle Tests</h4>
-                <p>Push-Up Links: {funktionelleTests.linksPushUp}</p>
-                <p>Push-Up Rechts: {funktionelleTests.rechtsPushUp}</p>
-                <p>Dorsalextension Links: {funktionelleTests.linksDorsalextension}</p>
-                <p>Dorsalextension Rechts: {funktionelleTests.rechtsDorsalextension}</p>
-              </div>
+          {activeTab === "diagnostic" && (
+            <div>
+              <h2 className="text-xl font-bold mb-2">Diagnostic</h2>
+              <p>Diagnostic section content goes here... Add a component</p>
             </div>
-          );
-        })}
+          )}
+        </div>
+      </div>
     </div>
   );
 };
