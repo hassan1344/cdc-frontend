@@ -83,7 +83,7 @@ export default function PatientDetailsModal({ entries }) {
             </p>
             <p>
               <span className="font-medium">Dauer der Diabetes:</span>{" "}
-              <strong>{formatValue(generalInfo.dauerDiab)} Jahre</strong>
+              <strong>{generalInfo.dauerDiab ? `${formatValue(generalInfo.dauerDiab)} Jahre` : `N/A`}</strong>
             </p>
             <p>
               <span className="font-medium">Diabetesschulung:</span>{" "}

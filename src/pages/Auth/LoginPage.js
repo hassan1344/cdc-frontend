@@ -19,8 +19,7 @@ const LoginPage = () => {
       return;
     }
 
-    const credentials = { email: emailOrId, password }
-        
+    const credentials = { email: emailOrId, password };
 
     try {
       const data = await logIn(credentials);
@@ -36,6 +35,7 @@ const LoginPage = () => {
           localStorage.setItem("patientId", data.data.user.email);
           navigate("/patient/patientDashboard");
         }
+        localStorage.setItem("user", JSON.stringify(data.data.user));
       } else {
         toast.dismiss();
         toast.error("Login failed. Please try again.");
@@ -52,7 +52,11 @@ const LoginPage = () => {
       <div className="bg-white bg-opacity-60 shadow-xl rounded-3xl p-8 w-full max-w-md backdrop-blur-md">
         <div className="flex flex-col items-center">
           <div className="bg-purple-300 p-3 rounded-full mb-4">
-            <FaUser className="text-white text-2xl" />
+            <img
+              src={require("../../images/12818828.png")}
+              alt="Logo"
+              className="h-8 w-8 object-contain"
+            />
           </div>
           <h2 className="text-2xl font-bold text-purple-800 mb-1">Login</h2>
           <p className="text-sm text-gray-700 mb-6">
