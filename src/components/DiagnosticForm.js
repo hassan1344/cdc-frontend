@@ -1,9 +1,9 @@
-import React, { useState, forwardRef, useImperativeHandle, useRef } from 'react';
+import React, { useEffect, useState, forwardRef, useImperativeHandle, useRef } from 'react';
 import DrawableImageCanvas from './DrawableImageCanvas';
 import footImage from '../images/foot-image-draw.png';
 import riskgroup from '../images/risk-group-t.png';
 
-const DiagnosticForm = forwardRef(({ }, ref) => {
+const DiagnosticForm = forwardRef(({ patientId }, ref) => {
     const [formData, setFormData] = useState({
         patientencode: '',       // was barcodeName
         geschlecht: '',         // was gender
@@ -352,6 +352,13 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
         },
     }));
 
+    useEffect(() => {
+        setFormData((prev) => ({
+            ...prev,
+            patientencode: patientId ? patientId.toString() : "Wird vom System generiert",
+        }));
+    }, [patientId]);
+
     return (
         <div>
             {/* Patient Information */}
@@ -363,6 +370,7 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                         className="w-full border px-2 py-1"
                         value={formData.patientencode}
                         onChange={(e) => handleChange('patientencode', e.target.value)}
+                        readOnly
                     />
                 </div>
 

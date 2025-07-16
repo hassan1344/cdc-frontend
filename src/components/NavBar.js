@@ -55,7 +55,7 @@ const NavBar = () => {
               alt="Logo"
               className="h-8 w-8 object-contain"
             />
-            <h1 className="text-2xl font-bold text-gray-900">Shooo</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Medical Care Register</h1>
           </div>{" "}
           <div className="flex space-x-6">
             <NavLink to="/doctor/dashboard" className={navLinkClass}>

@@ -18,6 +18,19 @@ export const fetchQuestionnairesByPatientId = async (patientId) => {
   }
 };
 
+export const createQuestionnaire = async (payload) => {
+  try {
+    const response = await api.post(
+      `/questionnaire`,
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating questionnaire:", error);
+    throw error;
+  }
+};
+
 export const updateQuestionnaire = async (questionnaireId, payload) => {
   try {
     const response = await api.put(
