@@ -10,18 +10,11 @@ const ProgressBar = ({
   validateSectionCompletion,
   canNavigateToSection,
   onSectionClick,
-  subtitle
+  subtitle,
 }) => {
   return (
     <div className="bg-white border-b">
       <div className="max-w-4xl mx-auto px-6 py-6">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-4">
-          <ChevronLeft className="w-5 h-5 text-gray-400" />
-          <span className="text-sm font-medium text-gray-900">
-            MOS Questionnaire
-          </span>
-        </div>
 
         {/* Section Progress */}
         <div className="flex items-center justify-between mb-6">

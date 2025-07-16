@@ -5,16 +5,11 @@ import {
   preAssessmentQuestions,
   postAssessmentQuestions,
 } from "../data/questionData.js";
+import QuestionnaireCompare from "./QuestionnaireCompare.js";
 
-const QuestionnaireTable = () => {
+const QuestionnaireTable = ({ id }) => {
   const [questionnaires, setQuestionnaires] = useState([]);
   const navigate = useNavigate();
-  const [id, setId] = useState();
-
-  useEffect(() => {
-    const storedId = localStorage.getItem("patientId");
-    setId(storedId);
-  }, []);
 
   useEffect(() => {
     if (!id) return;
@@ -32,6 +27,9 @@ const QuestionnaireTable = () => {
     getData();
   }, [id]);
 
+  useEffect(() => {
+    console.log(questionnaires);
+  }, [questionnaires]);
   const formatDate = (dateStr) =>
     new Date(dateStr).toLocaleDateString("de-DE", {
       year: "numeric",
@@ -111,6 +109,7 @@ const QuestionnaireTable = () => {
           isQuestionAnswered(question, responseMap[question.id]);
 
         if (shouldShow) totalQuestions++;
+        if (!shouldShow && wasAnswered) totalQuestions++;
         if (wasAnswered) answeredQuestions++;
       });
     });
@@ -126,12 +125,17 @@ const QuestionnaireTable = () => {
     if (!dependentResponse) return false;
 
     const dependentValue = getResponseValue(dependentResponse);
+    const condition = question.conditional.showIf;
 
-    if (typeof question.conditional.showIf === "function") {
-      return question.conditional.showIf(dependentValue);
+    if (typeof condition === "function") {
+      return condition(dependentValue);
     }
 
-    return dependentValue === question.conditional.showIf;
+    if (Array.isArray(condition)) {
+      return condition.includes(dependentValue);
+    }
+
+    return dependentValue === condition;
   };
 
   // Helper function to get the actual response value
@@ -220,11 +224,20 @@ const QuestionnaireTable = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-8">
+    <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-8 space-y-10">
+      {/* Section 2: Questionnaire Compare */}
       <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-xl p-8">
-        <h1 className="text-3xl font-semibold text-gray-800 mb-6 border-b pb-3">
-          Fragebögen von Patient <span className="text-blue-600">#{id}</span>
-        </h1>
+        <h3 className="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">
+          Vergleich der Fragebögen
+        </h3>
+        <QuestionnaireCompare questionnaires={questionnaires} />
+      </div>
+
+      {/* Section 1: Questionnaires Table */}
+      <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-xl p-8">
+        <h3 className="text-3xl font-semibold text-gray-800 mb-6 border-b pb-3">
+          Fragebögen von Patient
+        </h3>
 
         {questionnaires.length === 0 ? (
           <div className="text-center py-16 text-gray-500 text-lg">
@@ -251,13 +264,6 @@ const QuestionnaireTable = () => {
                     <tr
                       key={q.id}
                       className="hover:bg-blue-50 transition cursor-pointer"
-                    //   onClick={() => {
-                    //     if (q.type === "pre") {
-                    //       navigate("/patient/mosQuestionnaire1", { state: q });
-                    //     } else if (q.type === "post") {
-                    //       navigate("/patient/mosQuestionnaire2", { state: q });
-                    //     }
-                    //   }}
                     >
                       <td className="py-3 px-4 border-b">{index + 1}</td>
                       <td className="py-3 px-4 border-b capitalize font-medium">
@@ -316,6 +322,7 @@ const QuestionnaireTable = () => {
           </div>
         )}
       </div>
+
     </div>
   );
 };
