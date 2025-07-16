@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import mockData from "../../data/mockData.json";
 import PatientDetailsModal from "../../components/PatientDetailsModal";
 import QuestionnaireTable from "../../components/QuestionnaireTable";
+import DiagnosesTable from "../../components/DiagnosesTable";
 import { fetchDiagnosticData } from "../../api/api";
 
 const PatientDetails = () => {
