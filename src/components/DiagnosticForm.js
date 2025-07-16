@@ -1,21 +1,26 @@
 import React, { useState, forwardRef, useImperativeHandle, useRef } from 'react';
 import DrawableImageCanvas from './DrawableImageCanvas';
 import footImage from '../images/foot-image-draw.png';
+import riskgroup from '../images/risk-group-t.png';
 
 const DiagnosticForm = forwardRef(({ }, ref) => {
     const [formData, setFormData] = useState({
-        barcodeName: '',
-        gender: '',
-        date: '',
-        firstName: '',
-        height: '',
-        podoTreatment: '',
-        birthDate: '',
-        weight: '',
-        diabetesDuration: '',
-        diabetesType: '',
-        diabetesOtherText: '',
-        mrsaStatus: '',
+        patientencode: '',       // was barcodeName
+        geschlecht: '',         // was gender
+        datum: '',              // was date
+        vorname: '',            // was firstName
+        groeße: '',             // was height
+        diabSchulung: '',       // was podoTreatment
+        geburtsdatum: '',       // was birthDate
+        gewicht: '',            // was weight
+        dauerDiab: '',          // was diabetesDuration
+        diabetestyp: '',        // was diabetesType
+        diabetesanderertext: '',// was diabetesOtherText
+        mrsa: '',               // was mrsaStatus
+        anlage: null,
+        anlagenSources: null,
+        orthoNeuroFindings: '',
+        signature: '', //unterschrift
     });
 
     const [clinicalFindings, setClinicalFindings] = useState([
@@ -102,6 +107,208 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
             note: '(s. Einzeichnung)',
         },
     ]);
+
+    const [riskGroupStatus, setRiskGroupStatus] = useState([
+        {
+            label: 'Typ 0',
+            type: 'checkbox-yesno',
+            leftValue: false,
+            rightValue: false,
+        },
+        {
+            label: 'Typ I',
+            type: 'checkbox-yesno',
+            leftValue: false,
+            rightValue: false,
+        },
+        {
+            label: 'Typ II a',
+            type: 'checkbox-yesno',
+            leftValue: false,
+            rightValue: false,
+        },
+        {
+            label: 'Typ II b',
+            type: 'checkbox-yesno',
+            leftValue: false,
+            rightValue: false,
+        },
+        {
+            label: 'Typ III',
+            type: 'checkbox-yesno',
+            leftValue: false,
+            rightValue: false,
+        },
+        {
+            label: 'Typ IV',
+            type: 'checkbox-yesno',
+            leftValue: false,
+            rightValue: false,
+        },
+        {
+            label: 'Typ V',
+            type: 'checkbox-yesno',
+            leftValue: false,
+            rightValue: false,
+        },
+        {
+            label: 'Typ VI',
+            type: 'checkbox-yesno',
+            leftValue: false,
+            rightValue: false,
+        },
+        {
+            label: 'Typ VII a',
+            type: 'checkbox-yesno',
+            leftValue: false,
+            rightValue: false,
+        },
+        {
+            label: 'Typ VII b',
+            type: 'checkbox-yesno',
+            leftValue: false,
+            rightValue: false,
+        },
+        {
+            label: 'Typ VII c',
+            type: 'checkbox-yesno',
+            leftValue: false,
+            rightValue: false,
+        },
+        {
+            label: 'Typ VII d',
+            type: 'checkbox-yesno',
+            leftValue: false,
+            rightValue: false,
+        },
+    ]);
+
+    const [hoeherversorgungStatus, setHoeherversorgungStatus] = useState([
+        {
+            label: 'a. Orthopädische Zusatzkomplikation',
+            value: false,
+        },
+        {
+            label: 'b. Neurologische Zusatzkomplikation (motorische Funktionseinschränkung / Parese eines oder beider Beine)',
+            value: false,
+        },
+        {
+            label: 'c. Fehlgeschlagene adäquate Vorversorgung',
+            value: false,
+        },
+    ]);
+
+    const [shoeProvisionData, setShoeProvisionData] = useState([
+        {
+            risikoTyp: "O",
+            title: "Fußgerechte Konfektionsschuhe",
+            details: [],
+            left: [false],
+            right: [false],
+        },
+        {
+            risikoTyp: "I",
+            title: "Orthopädieschuhtechnische Versorgung",
+            details: [
+                "mit orthopädischer Einlage",
+                "mit Schuhzurichtung",
+                "mit Maßschuh",
+            ],
+            left: [false, false, false],
+            right: [false, false, false],
+        },
+        {
+            risikoTyp: "IIa",
+            title: "Für DFS geeignete Schuhe",
+            details: [
+                "mit herausnehmbarer Weichpolstersohle",
+                "mit Weichpolsterbettungseinlage (elastisch, druckumverteilend, nach Maß)",
+            ],
+            left: [false, false],
+            right: [false, false],
+        },
+        {
+            risikoTyp: "IIb",
+            title: "Spezialschuhe bei DFS mit DAF",
+            details: ["mit diabetesadaptierter Fußbettung (DAF)"],
+            left: [false],
+            right: [false],
+        },
+        {
+            risikoTyp: "III",
+            title: "Spezialschuhe bei DFS mit DAF",
+            details: [
+                "mit diabetesadaptierter Fußbettung (DAF)",
+                "mit orthopädischer Schuhzurichtung",
+            ],
+            left: [false, false],
+            right: [false, false],
+        },
+        {
+            risikoTyp: "IV",
+            title: "Orthopädische Maßschuhe mit DAF",
+            details: ["mit diabetesadaptierter Fußbettung (DAF)"],
+            left: [false],
+            right: [false],
+        },
+        {
+            risikoTyp: "V",
+            title: "Knöchelübergreifende orthopädische Maß schuhe mit DAF",
+            details: [
+                "USG-stabilisierende Maßnahmen",
+                "OSG-stabilisierende Maßnahmen",
+                "Komplette Ruhigstellung mit Innenschuh über Wadenbauch",
+            ],
+            left: [false, false, false],
+            right: [false, false, false],
+        },
+        {
+            risikoTyp: "VI",
+            title: "(Knöchelübergreifende) orthopädische Maß schuhe mit DAF",
+            details: [
+                "Knöchelübergreifende Amputationsversorgung",
+                "Prothese, ggf. bis zum Knie",
+            ],
+            left: [false, false],
+            right: [false, false],
+        },
+        {
+            risikoTyp: "VIIa",
+            title: "Verbandsschuhe",
+            details: [],
+            left: [false],
+            right: [false],
+        },
+        {
+            risikoTyp: "VIIb",
+            title: "Individuelle kniehohe Orthese mit DAF",
+            details: ["nicht abnehmbar", "abnehmbar"],
+            left: [false, false],
+            right: [false, false],
+        },
+        {
+            risikoTyp: "VIIc",
+            title: "Kniehohe Orthese",
+            details: [
+                "konfektioniert",
+                "individuell",
+                "nicht abnehmbar",
+                "abnehmbar",
+                "Interimsschuh",
+            ],
+            left: [false, false, false, false, false],
+            right: [false, false, false, false, false],
+        },
+        {
+            risikoTyp: "VIId",
+            title: "Kniehohe individuelle Fersenentlastungs orthese",
+            details: ["nicht abnehmbar", "abnehmbar"],
+            left: [false, false],
+            right: [false, false],
+        },
+    ]);
+
+
     const [isDiabetesOther, setIsDiabetesOther] = useState(false);
     const [base64Image, setBase64Image] = useState('');
     const canvasRef = useRef();
@@ -113,10 +320,18 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
         }));
     };
 
+    const handleRiskGroupChange = (index, side) => {
+        setRiskGroupStatus((prev) => {
+            const updated = [...prev];
+            updated[index][side] = !updated[index][side];
+            return updated;
+        });
+    };
+
     const handleSubmit = () => {
         if (canvasRef.current) {
-            const image = canvasRef.current.triggerExport(); // 🎯 Export image
-            setBase64Image(image); // For preview only (not for getFormData)
+            const image = canvasRef.current.triggerExport();
+            setBase64Image(image);
             console.log("Exported base64:", image);
         }
     };
@@ -124,12 +339,15 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
     // Expose method to parent
     useImperativeHandle(ref, () => ({
         getFormData: () => {
-            const image = canvasRef.current?.triggerExport?.(); // 🧠 Safe access
+            const image = canvasRef.current?.triggerExport?.();
             return {
                 ...formData,
                 clinicalFindings,
                 fussStatus,
-                base64Image: image || '', // Always returns latest export
+                base64Image: '',
+                riskGroupStatus,
+                hoeherversorgungStatus,
+                shoeProvisionData
             };
         },
     }));
@@ -143,8 +361,8 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                     <input
                         type="text"
                         className="w-full border px-2 py-1"
-                        value={formData.barcodeName}
-                        onChange={(e) => handleChange('barcodeName', e.target.value)}
+                        value={formData.patientencode}
+                        onChange={(e) => handleChange('patientencode', e.target.value)}
                     />
                 </div>
 
@@ -154,8 +372,8 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                         <label key={g}>
                             <input
                                 type="checkbox"
-                                checked={formData.gender === g}
-                                onChange={() => handleChange('gender', g)}
+                                checked={formData.geschlecht === g}
+                                onChange={() => handleChange('geschlecht', g)}
                             />{' '}
                             {g}
                         </label>
@@ -167,8 +385,8 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                     <input
                         type="date"
                         className="w-full border px-2 py-1"
-                        value={formData.date}
-                        onChange={(e) => handleChange('date', e.target.value)}
+                        value={formData.datum}
+                        onChange={(e) => handleChange('datum', e.target.value)}
                     />
                 </div>
 
@@ -177,8 +395,8 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                     <input
                         type="text"
                         className="w-full border px-2 py-1"
-                        value={formData.firstName}
-                        onChange={(e) => handleChange('firstName', e.target.value)}
+                        value={formData.vorname}
+                        onChange={(e) => handleChange('vorname', e.target.value)}
                     />
                 </div>
 
@@ -187,8 +405,8 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                     <input
                         type="number"
                         className="w-full border px-2 py-1"
-                        value={formData.height}
-                        onChange={(e) => handleChange('height', e.target.value)}
+                        value={formData.groeße}
+                        onChange={(e) => handleChange('groeße', e.target.value)}
                     />
                 </div>
 
@@ -199,8 +417,8 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                             <label key={val}>
                                 <input
                                     type="checkbox"
-                                    checked={formData.podoTreatment === val}
-                                    onChange={() => handleChange('podoTreatment', val)}
+                                    checked={formData.diabSchulung === val}
+                                    onChange={() => handleChange('diabSchulung', val)}
                                 />{' '}
                                 {val}
                             </label>
@@ -213,8 +431,8 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                     <input
                         type="date"
                         className="w-full border px-2 py-1"
-                        value={formData.birthDate}
-                        onChange={(e) => handleChange('birthDate', e.target.value)}
+                        value={formData.geburtsdatum}
+                        onChange={(e) => handleChange('geburtsdatum', e.target.value)}
                     />
                 </div>
 
@@ -223,8 +441,8 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                     <input
                         type="number"
                         className="w-full border px-2 py-1"
-                        value={formData.weight}
-                        onChange={(e) => handleChange('weight', e.target.value)}
+                        value={formData.gewicht}
+                        onChange={(e) => handleChange('gewicht', e.target.value)}
                     />
                 </div>
 
@@ -233,8 +451,8 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                     <input
                         type="number"
                         className="w-full border px-2 py-1"
-                        value={formData.diabetesDuration}
-                        onChange={(e) => handleChange('diabetesDuration', e.target.value)}
+                        value={formData.dauerDiab}
+                        onChange={(e) => handleChange('dauerDiab', e.target.value)}
                     />
                 </div>
             </section>
@@ -248,16 +466,16 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                                 <input
                                     type="checkbox"
                                     checked={
-                                        formData.diabetesType === type ||
+                                        formData.diabetestyp === type ||
                                         (type === 'Sonstiges' && isDiabetesOther)
                                     }
                                     onChange={() => {
-                                        handleChange('diabetesType', type);
+                                        handleChange('diabetestyp', type);
                                         if (type === 'Sonstiges') {
                                             setIsDiabetesOther(true);
                                         } else {
                                             setIsDiabetesOther(false);
-                                            handleChange('diabetesOtherText', '');
+                                            handleChange('diabetesanderertext', '');
                                         }
                                     }}
                                 />{' '}
@@ -269,10 +487,8 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                                 type="text"
                                 className="border px-2 py-1"
                                 placeholder="Bitte angeben..."
-                                value={formData.diabetesOtherText}
-                                onChange={(e) =>
-                                    handleChange('diabetesOtherText', e.target.value)
-                                }
+                                value={formData.diabetesanderertext}
+                                onChange={(e) => handleChange('diabetesanderertext', e.target.value)}
                             />
                         )}
                     </div>
@@ -285,8 +501,8 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                             <label key={val}>
                                 <input
                                     type="checkbox"
-                                    checked={formData.mrsaStatus === val}
-                                    onChange={() => handleChange('mrsaStatus', val)}
+                                    checked={formData.mrsa === val}
+                                    onChange={() => handleChange('mrsa', val)}
                                 />{' '}
                                 {val}
                             </label>
@@ -294,6 +510,7 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                     </div>
                 </div>
             </section>
+
 
             {/* Klinischer Befund */}
             <section className="mb-6">
@@ -312,7 +529,7 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                             {clinicalFindings.map((item, i) => (
                                 <tr key={i}>
                                     <td className="border border-black px-2 py-1 font-semibold">
-                                        {item.label} {item.note && <span className="font-normal">{item.note}</span>}
+                                        {item.label}
                                     </td>
 
                                     {/* Left foot cell */}
@@ -513,6 +730,8 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                 </div>
             </section>
 
+
+            {/* Drawable Image Canvas */}
             <section className="mb-10">
                 <DrawableImageCanvas
                     ref={canvasRef}
@@ -522,6 +741,250 @@ const DiagnosticForm = forwardRef(({ }, ref) => {
                 />
 
             </section>
+
+            {/* Orthopädische / neurologische Zusatzbefunde */}
+            <section className="mb-6">
+                <div className="border border-black">
+                    <div className="bg-cyan-400 border-b border-black px-2 py-2">
+                        <h2 className="font-semibold text-lg">
+                            Orthopädische / neurologische Zusatzbefunde, Gangabweichung (z. B. Rheuma, Endoprothetik, Lähmungen):
+                        </h2>
+                    </div>
+                    <div className="px-2 py-3">
+                        <textarea
+                            className="w-full border-b border-black px-2 py-1 resize-none"
+                            rows={4}
+                            placeholder="Bitte angeben..."
+                            value={formData.orthoNeuroFindings}
+                            onChange={(e) =>
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    orthoNeuroFindings: e.target.value,
+                                }))
+                            }
+                        ></textarea>
+                    </div>
+                </div>
+            </section>
+
+            {/*  Kategorisierung nach Risikogruppen */}
+            <section className="mb-6">
+                <div className="overflow-x-auto border border-black">
+                    <table className="w-full text-sm table-fixed border-collapse">
+                        <colgroup>
+                            <col style={{ width: '60%' }} />
+                            <col style={{ width: '20%' }} />
+                            <col style={{ width: '20%' }} />
+                        </colgroup>
+                        <thead>
+                            <tr className="bg-cyan-400 text-black">
+                                <th className="border border-black px-2 py-1 text-left">
+                                    <h2 className="font-semibold text-lg">Kategorisierung nach Risikogruppen</h2>
+                                </th>
+                                <th className="border border-black px-2 py-1 text-center text-base">linker Fuß</th>
+                                <th className="border border-black px-2 py-1 text-center text-base">rechter Fuß</th>
+                            </tr>
+                        </thead>
+                        <tbody className="text-lg">
+                            {riskGroupStatus.map((item, index) => (
+                                <tr key={index}>
+                                    {/* First column: static image with rowspan */}
+                                    {index === 0 && (
+                                        <td className="border border-black px-2 py-1 text-center" rowSpan={riskGroupStatus.length}>
+                                            <img
+                                                src={riskgroup}
+                                                alt="Risk Group"
+                                                className="w-full rounded-lg"
+                                            />
+                                        </td>
+                                    )}
+                                    {/* Left foot checkbox */}
+                                    <td className="border border-black px-2 py-1 text-center">
+                                        <label className="mr-3">
+                                            <input
+                                                type="checkbox"
+                                                checked={item.leftValue}
+                                                onChange={() => {
+                                                    const updated = [...riskGroupStatus];
+                                                    updated[index].leftValue = !updated[index].leftValue;
+                                                    setRiskGroupStatus(updated);
+                                                }}
+                                            />{' '}
+                                            {item.label}
+                                        </label>
+                                    </td>
+
+                                    {/* Right foot checkbox */}
+                                    <td className="border border-black px-2 py-1 text-center">
+                                        <label className="mr-3">
+                                            <input
+                                                type="checkbox"
+                                                checked={item.rightValue}
+                                                onChange={() => {
+                                                    const updated = [...riskGroupStatus];
+                                                    updated[index].rightValue = !updated[index].rightValue;
+                                                    setRiskGroupStatus(updated);
+                                                }}
+                                            />{' '}
+                                            {item.label}
+                                        </label>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            {/* Kriterien für eine höhergradige Versorgung */}
+            <section className="mb-6">
+                <div className="overflow-x-auto border border-black">
+                    <table className="w-full text-sm table-fixed border-collapse">
+                        <colgroup>
+                            <col style={{ width: '80%' }} />
+                            <col style={{ width: '20%' }} />
+                        </colgroup>
+                        <thead>
+                            <tr className="bg-cyan-400 text-black">
+                                <th className="border border-black px-2 py-1 text-left w-1/3">
+                                    <h2 className="font-semibold text-lg">Kriterien für eine höhergradige Versorgung</h2>
+                                </th>
+                                <th className="border border-black px-2 py-1 text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {hoeherversorgungStatus.map((item, index) => (
+                                <tr key={index}>
+                                    <td className="border border-black px-2 py-1 font-semibold">
+                                        {item.label}
+                                    </td>
+                                    <td className="border border-black px-2 py-1 text-center">
+                                        <label className="mr-3">
+                                            <input
+                                                type="checkbox"
+                                                checked={item.value}
+                                                onChange={() => {
+                                                    const updated = [...hoeherversorgungStatus];
+                                                    updated[index].value = !updated[index].value;
+                                                    setHoeherversorgungStatus(updated);
+                                                }}
+                                            />
+                                        </label>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            {/* Schuhversorgung (technische Auslegung) gemäß Risikogruppe */}
+            <section className="mb-6">
+                <div className="overflow-x-auto border border-black">
+                    <table className="w-full text-sm table-fixed border-collapse">
+                        <colgroup>
+                            <col style={{ width: '10%' }} />
+                            <col style={{ width: '35%' }} />
+                            <col style={{ width: '35%' }} />
+                            <col style={{ width: '10%' }} />
+                            <col style={{ width: '10%' }} />
+                        </colgroup>
+                        <thead>
+                            <tr className="bg-cyan-400 text-black">
+                                <th className="border border-black px-2 py-1 text-center">Risiko-Typ</th>
+                                <th className="border border-black px-2 py-1 text-left" colSpan={2}>
+                                    <h2 className="font-semibold text-lg">
+                                        Schuhversorgung (technische Auslegung) gemäß Risikogruppe
+                                    </h2>
+                                </th>
+                                <th className="border border-black px-2 py-1 text-center">linker Fuß</th>
+                                <th className="border border-black px-2 py-1 text-center">rechter Fuß</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {shoeProvisionData.map((row, rowIndex) => (
+                                <tr key={rowIndex}>
+                                    <td className="border border-black px-2 py-1 text-center">
+                                        {row.risikoTyp}
+                                    </td>
+                                    <td className="border border-black px-2 py-1 font-semibold">
+                                        {row.title}
+                                    </td>
+                                    <td className="border border-black px-2 py-1">
+                                        {row.details.map((detail, i) => (
+                                            <div key={i}>{detail}</div>
+                                        ))}
+                                    </td>
+                                    <td className="border border-black px-2 py-1 text-center">
+                                        {row.left.map((checked, i) => (
+                                            <label className="mr-3 block" key={i}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={checked}
+                                                    onChange={() => {
+                                                        const updated = [...shoeProvisionData];
+                                                        updated[rowIndex].left[i] = !checked;
+                                                        setShoeProvisionData(updated);
+                                                    }}
+                                                />
+                                            </label>
+                                        ))}
+                                    </td>
+                                    <td className="border border-black px-2 py-1 text-center">
+                                        {row.right.map((checked, i) => (
+                                            <label className="mr-3 block" key={i}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={checked}
+                                                    onChange={() => {
+                                                        const updated = [...shoeProvisionData];
+                                                        updated[rowIndex].right[i] = !checked;
+                                                        setShoeProvisionData(updated);
+                                                    }}
+                                                />
+                                            </label>
+                                        ))}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            {/* Signature */}
+            <section className="mb-6">
+                <div className="overflow-x-auto border border-black">
+                    <table className="w-full text-sm table-fixed border-collapse">
+                        <colgroup>
+                            <col style={{ width: '30%' }} />
+                            <col style={{ width: '70%' }} />
+                        </colgroup>
+                        <tbody>
+                            <tr className="h-16">
+                                <td className="border border-black px-2 py-3 font-semibold">
+                                    <span className="ml-6">ggf. Anlage beachten!</span>
+                                </td>
+                                <td className="border border-black px-2 py-3 font-semibold">
+                                    <div className="flex items-center gap-2">
+                                        <span>Unterschrift:</span>
+                                        <input
+                                            type="text"
+                                            className="border-b border-black flex-1 outline-none"
+                                            placeholder=""
+                                            value={formData.signature}
+                                            onChange={(e) =>
+                                                setFormData((prev) => ({ ...prev, signature: e.target.value }))
+                                            }
+                                        />
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
 
         </div>
     );
