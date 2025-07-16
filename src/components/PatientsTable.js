@@ -162,10 +162,12 @@ export default function PatientTable({ patientData = [], loading = false }) {
                       {patient.patientencode}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {calculateAge(allgemeineDaten.geburtsdatum)} years
+                      {allgemeineDaten.geburtsdatum
+                        ? `${calculateAge(allgemeineDaten.geburtsdatum)} years`
+                        : "Unbekannt"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {allgemeineDaten.geschlecht === "männlich" ? "Male" : "Female"}
+                      {allgemeineDaten.geschlecht !== "" ? (allgemeineDaten.geschlecht === "männlich" ? "Male" : "Female") : "Unbekaant"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {allgemeineDaten.diabetestyp}

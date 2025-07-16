@@ -1,5 +1,6 @@
 // src/api/api.js
 import axios from "axios";
+import { mapDiagnoses } from '../utils/mapDiagnoses';
 
 const BASE_URL = "https://pg06.regifor.de/api/v1";
 
@@ -70,6 +71,31 @@ export const fetchDiagnosticDataByPatientId = async (patientId) => {
   }
 };
 
+export const createDiagnosticData = async (payload) => {
+  try {
+
+    let mappedData = mapDiagnoses(payload);
+    console.log("Mapped Diagnostic Data:", mappedData);
+    const customPayload = {
+      patientencode:  payload.patientencode ? parseInt(payload.patientencode, 10) : "",
+      partnerID: parseInt(localStorage.getItem("doctorId"), 10) || "",
+      allgemeineDaten: mappedData.allgemeineDaten,
+      klinischerBefund: mappedData.klinischerBefund,
+      fussstatus: mappedData.fussstatus,
+      fussstatusGrafik: mappedData.fussstatusGrafik,
+      kriterien: mappedData.kriterien,
+      kategorisierung: mappedData.kategorisierung,
+      schuhversorgung: mappedData.schuhversorgung,
+      funktionelleTests: {},
+    };
+
+    const response = await api.post("/diagnoses", customPayload);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating diagnostic data:", error);
+    throw error;
+  }
+}
 export const fetchUserData = async (type, id) => {
   try {
     if (type === "doctor") {
