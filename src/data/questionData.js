@@ -284,7 +284,7 @@ export const preAssessmentQuestions = [
         text: "18. Erwarten Sie, mit den Schuhen folgende Aktivitäten mehr oder weniger ausüben zu können?",
         icf: "ICF: d450, d455, d460, d640, d920",
         type: "textarea",
-        placeholder: "Aktivitäten bewerten 🏃‍♂️" ,
+        placeholder: "Aktivitäten bewerten 🏃‍♂️",
       },
     ],
   },
@@ -418,11 +418,23 @@ export const postAssessmentQuestions = [
         icf: "ICF: d450 Gehen",
         type: "radio",
         options: [
-          { text: "Ich kann mich nur in meiner Wohnung bewegen (0–10 Meter)", emoji: "🏠" },
+          {
+            text: "Ich kann mich nur in meiner Wohnung bewegen (0–10 Meter)",
+            emoji: "🏠",
+          },
           { text: "Ich kann zum Nachbarn gehen (10–50 Meter)", emoji: "👋" },
-          { text: "Ich kann bis zur Straßenecke gehen (50–200 Meter)", emoji: "🚶" },
-          { text: "Ich kann zu Geschäften in der Nachbarschaft gehen (200 Meter – 1 Kilometer)", emoji: "🏪" },
-          { text: "Ich kann längere Strecken ohne Pause gehen (mehr als 1 Kilometer)", emoji: "🚶‍♂️💪" },
+          {
+            text: "Ich kann bis zur Straßenecke gehen (50–200 Meter)",
+            emoji: "🚶",
+          },
+          {
+            text: "Ich kann zu Geschäften in der Nachbarschaft gehen (200 Meter – 1 Kilometer)",
+            emoji: "🏪",
+          },
+          {
+            text: "Ich kann längere Strecken ohne Pause gehen (mehr als 1 Kilometer)",
+            emoji: "🚶‍♂️💪",
+          },
         ],
       },
       {
@@ -434,7 +446,10 @@ export const postAssessmentQuestions = [
           { text: "… durch die Schuhe verbessert", emoji: "📈" },
           { text: "… verbessert, aber nicht wegen der Schuhe", emoji: "↗️" },
           { text: "… nicht verändert", emoji: "➖" },
-          { text: "… verschlechtert, aber nicht wegen der Schuhe", emoji: "↘️" },
+          {
+            text: "… verschlechtert, aber nicht wegen der Schuhe",
+            emoji: "↘️",
+          },
           { text: "… durch die Schuhe verschlechtert", emoji: "📉" },
         ],
       },
@@ -476,7 +491,7 @@ export const postAssessmentQuestions = [
         id: "wound_change",
         text: "6. Haben Ihre orthopädischen Schuhe eine Veränderung der Wunden/Geschwüre verursacht?",
         icf: "ICF: b810",
-        type: "checkbox",
+        type: "radio",
         options: [
           { text: "Mehr Wunden", emoji: "➕" },
           { text: "Größere Wunden", emoji: "⬆️" },
@@ -648,7 +663,10 @@ export const postAssessmentQuestions = [
           { text: "1–4 Stunden", emoji: "🕐" },
           { text: "Weniger als 1 Stunde", emoji: "⌛" },
         ],
-        conditional: { dependsOn: "usage_frequency", showIf: (v) => v !== "Nie" },
+        conditional: {
+          dependsOn: "usage_frequency",
+          showIf: (v) => v !== "Nie",
+        },
       },
       {
         id: "usage_as_expected",
@@ -659,6 +677,10 @@ export const postAssessmentQuestions = [
           { text: "Nein", emoji: "❌" },
           { text: "Ich weiß es nicht", emoji: "🤷" },
         ],
+        conditional: {
+          dependsOn: "usage_frequency",
+          showIf: (v) => v !== "Nie",
+        },
       },
       {
         id: "usage_satisfaction",
@@ -715,8 +737,16 @@ export const postAssessmentQuestions = [
           { text: "Die Lösung der Fußprobleme ist wichtiger", emoji: "🩺" },
         ],
       },
-      { id: "shoe_advantages", text: "24. Was sind die Vorteile Ihrer orthopädischen Schuhe?", type: "textarea" },
-      { id: "shoe_disadvantages", text: "25. Was sind die Nachteile Ihrer orthopädischen Schuhe?", type: "textarea" },
+      {
+        id: "shoe_advantages",
+        text: "24. Was sind die Vorteile Ihrer orthopädischen Schuhe?",
+        type: "textarea",
+      },
+      {
+        id: "shoe_disadvantages",
+        text: "25. Was sind die Nachteile Ihrer orthopädischen Schuhe?",
+        type: "textarea",
+      },
       {
         id: "advantages_over_disadvantages",
         text: "26. Überwiegen die Vorteile die Nachteile?",
@@ -740,10 +770,26 @@ export const postAssessmentQuestions = [
           { text: "Ich weiß es nicht", emoji: "🤷" },
         ],
       },
-      { id: "goal_not_achieved_reason", text: "28. Was ist der Grund, dass Ihre Ziele nicht erreicht wurden?", type: "textarea" },
-      { id: "usability_rating", text: "29. Wie beurteilen Sie die Gebrauchstauglichkeit Ihrer orthopädischen Schuhe?", type: "textarea" },
-      { id: "usability_factors", text: "30. Gibt es weitere Eigenschaften/Funktionen, die die Gebrauchstauglichkeit Ihrer Schuhe beeinflussen?", type: "textarea" },
-      { id: "additional_comments_post", text: "31. Haben Sie weitere Anmerkungen?", type: "textarea" },
+      {
+        id: "goal_not_achieved_reason",
+        text: "28. Was ist der Grund, dass Ihre Ziele nicht erreicht wurden?",
+        type: "textarea",
+      },
+      {
+        id: "usability_rating",
+        text: "29. Wie beurteilen Sie die Gebrauchstauglichkeit Ihrer orthopädischen Schuhe?",
+        type: "textarea",
+      },
+      {
+        id: "usability_factors",
+        text: "30. Gibt es weitere Eigenschaften/Funktionen, die die Gebrauchstauglichkeit Ihrer Schuhe beeinflussen?",
+        type: "textarea",
+      },
+      {
+        id: "additional_comments_post",
+        text: "31. Haben Sie weitere Anmerkungen?",
+        type: "textarea",
+      },
     ],
   },
   {

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   Heart,
   AlertCircle,
@@ -12,13 +12,45 @@ import {
 import { useParams, useNavigate } from "react-router-dom";
 import mockData from "../../data/mockData.json";
 import { calculateAge } from "../../utils/calculateAge";
+import { fetchDiagnosticDataByPatientId } from "../../api/api";
 
 const PatientDashboard = () => {
-  const id = "377643390"; // Demo patient ID
+  const [diagnosticData, setDiagnosticData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [id, setId] = useState(null);
 
-  const allPatientData = useMemo(() => autoParseJsonStrings(mockData), []);
-  const entries = allPatientData.filter(
-    (entry) => entry.patientencode?.toString() === id
+  // Fetch diagnostic data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const patientId = localStorage.getItem("patientId");
+
+        if (!patientId) {
+          setError("Patient ID not found in localStorage");
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetchDiagnosticDataByPatientId(patientId);
+        setId(patientId);
+        setDiagnosticData(response);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching diagnostic data:", err);
+        setError("Failed to fetch diagnostic data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const entries = useMemo(
+    () => autoParseJsonStrings(diagnosticData),
+    [diagnosticData]
   );
 
   if (entries.length === 0) {

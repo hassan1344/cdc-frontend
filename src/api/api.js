@@ -10,7 +10,6 @@ const api = axios.create({
 
 export const fetchQuestionnairesByPatientId = async (patientId) => {
   try {
-    console.log(patientId);
     const response = await api.get(`/questionnaire/${patientId}`);
     return response.data.data;
   } catch (error) {
@@ -21,7 +20,10 @@ export const fetchQuestionnairesByPatientId = async (patientId) => {
 
 export const updateQuestionnaire = async (questionnaireId, payload) => {
   try {
-    const response = await api.put(`/questionnaire/${questionnaireId}`, payload);
+    const response = await api.put(
+      `/questionnaire/${questionnaireId}`,
+      payload
+    );
     return response.data;
   } catch (error) {
     console.error("Error updating questionnaire:", error);
@@ -31,7 +33,7 @@ export const updateQuestionnaire = async (questionnaireId, payload) => {
 
 export const signUp = async (payload) => {
   try {
-    const response = await api.post('auth/signup', payload);
+    const response = await api.post("auth/signup", payload);
     return response.data;
   } catch (error) {
     console.error("Error Signing Up", error);
@@ -41,7 +43,7 @@ export const signUp = async (payload) => {
 
 export const logIn = async (payload) => {
   try {
-    const response = await api.post('/auth/login', payload);
+    const response = await api.post("/auth/login", payload);
     return response.data;
   } catch (error) {
     console.error("Error Loggin In", error);
@@ -62,7 +64,6 @@ export const fetchDiagnosticData = async (doctorId) => {
 export const fetchDiagnosticDataByPatientId = async (patientId) => {
   try {
     const response = await api.get(`/diagnoses/patient/${patientId}`);
-    console.log("Fetched diagnostic data:", response.data);
     return response.data.data.diagnoses;
   } catch (error) {
     console.error("Error fetching diagnostic data:", error);
@@ -95,3 +96,18 @@ export const createDiagnosticData = async (payload) => {
     throw error;
   }
 }
+export const fetchUserData = async (type, id) => {
+  try {
+    if (type === "doctor") {
+      const response = await api.get(`/doctor/${id}`);
+      return response.data;
+    }else{
+      const response = await api.get(`/patient/${id}`);
+      return response.data;
+
+    }
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    throw error;
+  }
+};
