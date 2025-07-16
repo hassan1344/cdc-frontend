@@ -3,7 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import mockData from "../../data/mockData.json";
 import PatientDetailsModal from "../../components/PatientDetailsModal";
 import QuestionnaireTable from "../../components/QuestionnaireTable";
+<<<<<<< Updated upstream
 
+=======
+import DiagnosesTable from "../../components/DiagnosesTable";
+import { fetchDiagnosticData } from "../../api/api";
+>>>>>>> Stashed changes
 
 const PatientDetails = () => {
   const { id } = useParams();
@@ -21,10 +26,10 @@ const PatientDetails = () => {
         No patient data found for ID: {id}
         <div className="mt-4">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/doctor/patients')}
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
           >
-            Go Back
+            ← Zurück
           </button>
         </div>
       </div>
@@ -35,7 +40,7 @@ const PatientDetails = () => {
     <div className="max-w-6xl mx-auto px-6 py-8">
       <div className="mb-6">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/doctor/patients')}
           className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 mb-4"
         >
           ← Zurück
@@ -74,8 +79,7 @@ const PatientDetails = () => {
 
           {activeTab === "diagnostic" && (
             <div>
-              <h2 className="text-xl font-bold mb-2">Diagnostic</h2>
-              <p>Diagnostic section content goes here... Add a component</p>
+              <DiagnosesTable id={id}/>
             </div>
           )}
         </div>
