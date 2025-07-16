@@ -3,12 +3,13 @@ import { toast } from "react-toastify";
 import '../../App.css';
 import DiagnosticForm from '../../components/DiagnosticForm';
 import { createDiagnosticData } from '../../api/api.js';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 const DiagnosticSheet = () => {
   const formRef = useRef();
   const navigate = useNavigate();
+  const { patientId } = useParams();
 
   const handleSubmit = async () => {
     try {
@@ -31,7 +32,7 @@ const DiagnosticSheet = () => {
               <div>Passwort: {password}</div>
               <button
                 onClick={() => {
-                  closeToast(); // close toast manually
+                  closeToast();
                   navigate(`/doctor/patientDetails/${patientencode}`);
                 }}
                 style={{
@@ -105,7 +106,7 @@ const DiagnosticSheet = () => {
         </div>
 
         <>
-          <DiagnosticForm ref={formRef} />
+          <DiagnosticForm ref={formRef} patientId={patientId} />
           <button
             onClick={handleSubmit}
             className="bg-green-600 text-white px-4 py-2 mt-4 rounded"

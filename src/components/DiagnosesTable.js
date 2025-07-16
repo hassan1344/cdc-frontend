@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { fetchDiagnosticDataByPatientId } from "../api/api"; // Adjust the path if needed
+import { useNavigate } from "react-router-dom";
 
 const DiagnosesTable = ({ id }) => {
     const [questionnaires, setQuestionnaires] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!id) return;
@@ -43,9 +45,18 @@ const DiagnosesTable = ({ id }) => {
     return (
         <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-8 space-y-10">
             <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-xl p-8">
-                <h3 className="text-3xl font-semibold text-gray-800 mb-6 border-b pb-3">
-                    Diagnosen von Patient
-                </h3>
+                {/* Flex container for title and button */}
+                <div className="flex justify-between items-center mb-6 border-b pb-3">
+                    <h3 className="text-3xl font-semibold text-gray-800">
+                        Diagnosen von Patient
+                    </h3>
+                    <button
+                        onClick={() => navigate(`/doctor/diagnostic/${id}`)}
+                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                    >
+                        New Diagnostic
+                    </button>
+                </div>
 
                 {questionnaires.length === 0 ? (
                     <div className="text-center py-12 text-gray-500">
