@@ -3,12 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import mockData from "../../data/mockData.json";
 import PatientDetailsModal from "../../components/PatientDetailsModal";
 import QuestionnaireTable from "../../components/QuestionnaireTable";
-<<<<<<< Updated upstream
-
-=======
 import DiagnosesTable from "../../components/DiagnosesTable";
 import { fetchDiagnosticData } from "../../api/api";
->>>>>>> Stashed changes
 
 const PatientDetails = () => {
   const { id } = useParams();

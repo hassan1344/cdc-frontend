@@ -47,9 +47,6 @@ export const logIn = async (payload) => {
     console.error("Error Loggin In", error);
     throw error;
   }
-<<<<<<< Updated upstream
-};
-=======
 };
 
 export const fetchDiagnosticData = async (doctorId) => {
@@ -98,4 +95,3 @@ export const createDiagnosticData = async (payload) => {
     throw error;
   }
 }
->>>>>>> Stashed changes
