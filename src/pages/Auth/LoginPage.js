@@ -19,10 +19,8 @@ const LoginPage = () => {
       return;
     }
 
-    const credentials =
-      role === "doctor"
-        ? { email: emailOrId, password }
-        : { id: emailOrId, password };
+    const credentials = { email: emailOrId, password }
+        
 
     try {
       const data = await logIn(credentials);
@@ -32,9 +30,10 @@ const LoginPage = () => {
         toast.success("Login successful!");
 
         if (data.data.user.role === "doctor") {
+          localStorage.setItem("doctorId", data.data.user.id);
           navigate("/doctor/dashboard");
         } else {
-          localStorage.setItem("patientId", data.data.id);
+          localStorage.setItem("patientId", data.data.user.email);
           navigate("/patient/patientDashboard");
         }
       } else {
