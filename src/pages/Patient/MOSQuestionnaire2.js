@@ -21,10 +21,16 @@ const MOSQuestionnaire = () => {
   }, [questionnaire]);
 
 
-  const handleComplete = (responses) => {
-    alert("Fragebogen abgeschlossen!");
-    console.log("Pre-assessment responses:", responses);
+  const handleComplete = async (responses) => {
+    try {
+    const payload = responses;
+    await updateQuestionnaire(questionnaire.id, payload);
+      navigate("/patient/questionnaire"); 
+  } catch (error) {
+    console.error("Error saving draft:", error);
+  }
   };
+
 
 const handleSave = async (responses) => {
   try {

@@ -28,7 +28,6 @@ const BaseQuestionnaire = ({
       const restoredState = mapResponsesToState(savedResponses, sections);
       setResponses(restoredState);
 
-      // Optionally set the current step to the first incomplete section
       const incompleteSection = findFirstIncompleteSection(restoredState);
       if (incompleteSection !== -1) {
         setCurrentStep(incompleteSection);
@@ -67,8 +66,19 @@ const BaseQuestionnaire = ({
 
   const shouldShowQuestion = (question, responseState = responses) => {
     if (!question.conditional) return true;
-    const dependentResponse = responseState[question.conditional.dependsOn];
-    return dependentResponse === question.conditional.showIf;
+
+    const { dependsOn, showIf } = question.conditional;
+    const dependentResponse = responseState[dependsOn];
+
+    if (typeof showIf === "function") {
+      return showIf(dependentResponse);
+    }
+
+    if (Array.isArray(showIf)) {
+      return showIf.includes(dependentResponse);
+    }
+
+    return dependentResponse === showIf;
   };
 
   useEffect(() => {
@@ -124,7 +134,7 @@ const BaseQuestionnaire = ({
     }));
   };
 
-  // Auto-save functionality (optional)
+  // Auto-save functionality
   useEffect(() => {
     if (onSave && Object.keys(responses).length > 0) {
       const timeoutId = setTimeout(() => {
@@ -157,8 +167,21 @@ const BaseQuestionnaire = ({
 
         if (question.conditional) {
           const dependentResponse = responses[question.conditional.dependsOn];
-          if (dependentResponse !== question.conditional.showIf) {
-            return;
+
+          if (typeof question.conditional.showIf === "function") {
+            if (!question.conditional.showIf(dependentResponse)) {
+              return; 
+            }
+          }
+          else if (Array.isArray(question.conditional.showIf)) {
+            if (!question.conditional.showIf.includes(dependentResponse)) {
+              return; 
+            }
+          }
+          else {
+            if (dependentResponse !== question.conditional.showIf) {
+              return; 
+            }
           }
         }
 
