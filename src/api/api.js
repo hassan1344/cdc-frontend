@@ -69,3 +69,19 @@ export const fetchDiagnosticDataByPatientId = async (patientId) => {
     throw error;
   }
 };
+
+export const fetchUserData = async (type, id) => {
+  try {
+    if (type === "doctor") {
+      const response = await api.get(`/doctor/${id}`);
+      return response.data;
+    }else{
+      const response = await api.get(`/patient/${id}`);
+      return response.data;
+
+    }
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    throw error;
+  }
+};
