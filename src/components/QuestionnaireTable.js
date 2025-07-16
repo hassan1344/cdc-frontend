@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchQuestionnairesByPatientId } from "../api/api.js";
+import { createQuestionnaire, fetchQuestionnairesByPatientId } from "../api/api.js";
 import { useNavigate } from "react-router-dom";
 import {
   preAssessmentQuestions,
@@ -223,6 +223,43 @@ const QuestionnaireTable = ({ id }) => {
     );
   };
 
+  const handleAddQuestionnaire = async () => {
+    try {
+      console.log("Date.now()", questionnaires)
+
+      let payload = {};
+      if (questionnaires.length > 0) {
+        payload = {
+          patient_id: parseInt(id),
+          type: "post",
+          date: new Date().toISOString().split("T")[0] + "T00:00:00",
+          responses: []
+        };
+      } else {
+        payload = {
+          patient_id: parseInt(id),
+          type: "pre",
+          date: new Date().toISOString().split("T")[0] + "T00:00:00",
+          responses: []
+        };
+      }
+
+      const response = await createQuestionnaire(payload);
+      console.log("Questionnaire created successfully:", response);
+
+      if (!response.status) {
+        throw new Error("Failed to add questionnaire");
+      }
+
+      // refresh the component to show the new questionnaire
+      const updatedQuestionnaires = await fetchQuestionnairesByPatientId(id);
+      setQuestionnaires(updatedQuestionnaires);
+    } catch (error) {
+      console.error("Error adding questionnaire:", error);
+    }
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 sm:px-8 space-y-10">
       {/* Section 2: Questionnaire Compare */}
@@ -235,9 +272,17 @@ const QuestionnaireTable = ({ id }) => {
 
       {/* Section 1: Questionnaires Table */}
       <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-xl p-8">
-        <h3 className="text-3xl font-semibold text-gray-800 mb-6 border-b pb-3">
-          Fragebögen von Patient
-        </h3>
+        <div className="flex justify-between items-center mb-6 border-b pb-3">
+          <h3 className="text-3xl font-semibold text-gray-800">
+            Fragebögen von Patient
+          </h3>
+          <button
+            onClick={handleAddQuestionnaire}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          >
+            Add Questionnaire
+          </button>
+        </div>
 
         {questionnaires.length === 0 ? (
           <div className="text-center py-16 text-gray-500 text-lg">
