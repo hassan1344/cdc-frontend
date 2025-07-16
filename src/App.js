@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DoctorLayout from "./layouts/DoctorLayout";
 import PatientLayout from "./layouts/PatientLayout";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import Dashboard from "./pages/Doctor/Dashboard";
 import PatientsPage from "./pages/Doctor/PatientsPage";
 import ReportsPage from "./pages/Doctor/ReportsPage";
@@ -44,6 +47,8 @@ const App = () => {
           <Route path="mosQuestionnaire2" element={<MOSQuestionnaire2 />} />
         </Route>
       </Routes>
+
+      <ToastContainer position="top-center" autoClose={3000} />
     </Router>
   );
 };

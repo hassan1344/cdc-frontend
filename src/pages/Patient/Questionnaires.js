@@ -111,6 +111,7 @@ const Questionnaire = () => {
           isQuestionAnswered(question, responseMap[question.id]);
 
         if (shouldShow) totalQuestions++;
+        if (!shouldShow && wasAnswered) totalQuestions++;
         if (wasAnswered) answeredQuestions++;
       });
     });
@@ -126,12 +127,17 @@ const Questionnaire = () => {
     if (!dependentResponse) return false;
 
     const dependentValue = getResponseValue(dependentResponse);
+    const condition = question.conditional.showIf;
 
-    if (typeof question.conditional.showIf === "function") {
-      return question.conditional.showIf(dependentValue);
+    if (typeof condition === "function") {
+      return condition(dependentValue);
     }
 
-    return dependentValue === question.conditional.showIf;
+    if (Array.isArray(condition)) {
+      return condition.includes(dependentValue);
+    }
+
+    return dependentValue === condition;
   };
 
   // Helper function to get the actual response value
@@ -252,6 +258,7 @@ const Questionnaire = () => {
                       key={q.id}
                       className="hover:bg-blue-50 transition cursor-pointer"
                       onClick={() => {
+                        if (progress === 100) return;
                         if (q.type === "pre") {
                           navigate("/patient/mosQuestionnaire1", { state: q });
                         } else if (q.type === "post") {
