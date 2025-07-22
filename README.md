@@ -9,5 +9,5 @@ The goal was to design and implement a software solution that supports structure
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 - **Routing:** [React Router](https://reactrouter.com/)
 - **State Management & Logic:** React **Hooks**
-- **API Communication:** `fetch` / `axios` (add your choice if used)
+- **API Communication:**  `axios`
 - **Component Architecture:** Functional components and reusable UI blocks
